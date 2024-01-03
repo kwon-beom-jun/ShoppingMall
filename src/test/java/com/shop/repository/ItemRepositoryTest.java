@@ -11,8 +11,29 @@ import org.springframework.test.context.TestPropertySource;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * <br> JPA Query Method Sample
+ * <br>
+ * <br>     Test Method : findByItemNmTest()
+ * <br>         - ItemRepository : List<Item> findByItemNm(String itemNm);
+ * <br>         - JPA Method     : find + (엔티티 이름) + By + 변수명
+ * <br>         - JPQL Snippet   : ... where x.itemNm = ?1
+ * <br>
+ * <br>     Test Method : findByItemNmOrItemDetailTest()
+ * <br>         - ItemRepository : List<Item> findByItemNmOrItemDetail(String itemNm, String itemDetail);
+ * <br>         - JPA Method     : findBy + 변수명1 + Or(And) + 변수명2
+ * <br>         - JPQL Snippet   : ... where x.itemNm = ?1 or(and) x.itemDetail = 2?
+ * <br>
+ * <br>     Test Method : findByPriceLessThanTest()
+ * <br>         - ItemRepository : List<Item> findByPriceLessThan(Integer price);
+ * <br>         - JPA Method     : findBy + 변수명 + LessThan(+Equal)
+ * <br>         - JPQL Snippet   : ... where x.price <(=) ?1
+ * <br>
+ * <br>     Test Method : findByPriceLessThanOrderByPriceDescTest()
+ * <br>         - ItemRepository : List<Item> findByPriceLessThanOrderByPriceDesc(Integer price);
+ * <br>         - JPA Method     : findBy + 변수명1 + LessThan + OrderBy + 변수명2 + Desc(Asc)
+ * <br>         - JPQL Snippet   : ... where x.price < ?1 order by x.price desc(asc)
+ */
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
 class ItemRepositoryTest {
@@ -32,7 +53,40 @@ class ItemRepositoryTest {
         item.setRegTime(LocalDateTime.now());
         item.setUpdateTime(LocalDateTime.now());
         Item savedItem = itemRepository.save(item);
-//        System.out.println(savedItem.toString());
+        System.out.println(savedItem.toString());
+    }
+
+    @Test
+    @DisplayName("상품명 조회 테스트")
+    public void findByItemNmTest() {
+        this.createItemList();
+        List<Item> itemList = itemRepository.findByItemNm("테스트 상품1");
+        listForEachPrint(itemList);
+    }
+
+    @Test
+    @DisplayName("상품명, 상품상세설명 or 테스트")
+    public void findByItemNmOrItemDetailTest() {
+        this.createItemList();
+        List<Item> itemList
+                = itemRepository.findByItemNmOrItemDetail("테스트 상품1", "테스트 상품 상세 설명5");
+        listForEachPrint(itemList);
+    }
+
+    @Test
+    @DisplayName("가격 LessThan 테스트")
+    public void findByPriceLessThanTest() {
+        this.createItemList();
+        List<Item> itemList = itemRepository.findByPriceLessThan(10005);
+        listForEachPrint(itemList);
+    }
+
+    @Test
+    @DisplayName("가격 LessThan & 내림차순 조회 테스트")
+    public void findByPriceLessThanOrderByPriceDescTest() {
+        this.createItemList();
+        List<Item> itemList = itemRepository.findByPriceLessThanOrderByPriceDesc(10005);
+        listForEachPrint(itemList);
     }
 
     public void createItemList() {
@@ -49,14 +103,9 @@ class ItemRepositoryTest {
         }
     }
 
-    @Test
-    @DisplayName("상품명 조회 테스트")
-    public void findByItemNmTest() {
-        this.createItemList();
-        List<Item> itemList = itemRepository.findByItemNm("테스트 상품1");
-        for (Item item : itemList) {
-            System.out.println(item.toString());
+    public <T> void listForEachPrint(List<T> list) {
+        for (T t : list) {
+            System.out.println(t.toString());
         }
     }
-
 }
