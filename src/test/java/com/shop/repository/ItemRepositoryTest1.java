@@ -11,8 +11,10 @@ import org.springframework.test.context.TestPropertySource;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.common.StringUtil.*;
+
 /**
- * <br> JPA Query Method Sample
+ * <br> TODO : JPA Query Method Sample
  * <br>
  * <br>     Test Method : findByItemNmTest()
  * <br>         - ItemRepository : List<Item> findByItemNm(String itemNm);
@@ -36,7 +38,7 @@ import java.util.List;
  */
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
-class ItemRepositoryTest {
+class ItemRepositoryTest1 {
 
     @Autowired
     ItemRepository itemRepository;
@@ -61,7 +63,7 @@ class ItemRepositoryTest {
     public void findByItemNmTest() {
         this.createItemList();
         List<Item> itemList = itemRepository.findByItemNm("테스트 상품1");
-        listForEachPrint(itemList);
+        listPrint(itemList);
     }
 
     @Test
@@ -70,7 +72,7 @@ class ItemRepositoryTest {
         this.createItemList();
         List<Item> itemList
                 = itemRepository.findByItemNmOrItemDetail("테스트 상품1", "테스트 상품 상세 설명5");
-        listForEachPrint(itemList);
+        listPrint(itemList);
     }
 
     @Test
@@ -78,7 +80,7 @@ class ItemRepositoryTest {
     public void findByPriceLessThanTest() {
         this.createItemList();
         List<Item> itemList = itemRepository.findByPriceLessThan(10005);
-        listForEachPrint(itemList);
+        listPrint(itemList);
     }
 
     @Test
@@ -86,7 +88,7 @@ class ItemRepositoryTest {
     public void findByPriceLessThanOrderByPriceDescTest() {
         this.createItemList();
         List<Item> itemList = itemRepository.findByPriceLessThanOrderByPriceDesc(10005);
-        listForEachPrint(itemList);
+        listPrint(itemList);
     }
 
     public void createItemList() {
@@ -100,12 +102,6 @@ class ItemRepositoryTest {
             item.setRegTime(LocalDateTime.now());
             item.setUpdateTime(LocalDateTime.now());
             Item savedItem = itemRepository.save(item);
-        }
-    }
-
-    public <T> void listForEachPrint(List<T> list) {
-        for (T t : list) {
-            System.out.println(t.toString());
         }
     }
 }
