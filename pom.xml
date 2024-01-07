@@ -91,7 +91,9 @@
 			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
 
-		<!--  -->
+		<!-- Thymeleaf Layout Dialect -->
+		<!-- 하나의 레이아웃을 여러 페이지에 똑같이 적용이 가능 -->
+		<!-- 공통적으로 적용되는 레이아웃을 미리 만들고 현재 작성중인 페이지만 레이아웃에 끼워넣음 -->
 		<dependency>
 			<groupId>nz.net.ultraq.thymeleaf</groupId>
 			<artifactId>thymeleaf-layout-dialect</artifactId>

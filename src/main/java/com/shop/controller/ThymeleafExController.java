@@ -51,7 +51,7 @@ public class ThymeleafExController {
 
     // URL : /thymeleaf/ex-href
     @GetMapping(value = "/ex-href")
-    public String thymeleafExHref(Model model) {
+    public String thymeleafExHref() {
         return "thymeleafEx/thymeleafExHref";
     }
 
@@ -62,6 +62,12 @@ public class ThymeleafExController {
         model.addAttribute("param1", param1);
         model.addAttribute("param2", param2);
         return "thymeleafEx/thymeleafExHrefParam";
+    }
+
+    // URL : /thymeleaf/ex-page-layout
+    @GetMapping(value = "/ex-page-layout")
+    public String thymeleafExPageLayout() {
+        return "thymeleafEx/thymeleafExPageLayout";
     }
 
 }
