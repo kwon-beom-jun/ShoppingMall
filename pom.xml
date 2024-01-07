@@ -67,12 +67,43 @@
 			<version>4.3.1</version>
 		</dependency>
 
+
+		<!-- Spring Boot Devtools -->
+		<!-- Automatic Restart : classpath 내부 파일이 변경될 때마다 애플리케이션 자동 재시작 -->
+		<!-- Live Reload : 정적자원(html, css, js) 수정 시 새로고침 없이 바로 적용 -->
+		<!-- Property Defaults : Thymeleaf의 성능 향상 기능인 캐싱 기능을 사용하지만
+								 개발 과정때 캐싱 기능을 사용한다면 수정한 소스가 제대로 반영되지 않을 수 있기 때문에
+								 cache 기본값을 false로 설정 할 수 있음 -->
+		<!-- 현재 항목이 보이지 않음(유로버전이 아니여서?) -->
+		<!--
+			설정방법
+				<Shift>x2 → registry → compiler.automake.allow.when.app.running
+		 		[file]-[Settings]-[Build], [Execution], [Deployment]-[Compiler] → Build project automatically 체크
+		 		application.properties
+		 			# Live Reload 기능 활성화
+		 			spring.devtools.livereload.enabled=true
+		 			# Thymeleaf cache 사용 중지
+		 			spring.thymeleaf.cache-false
+				브라우저 LiveReload 확장프로그램 설치
+		 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+		</dependency>
+
+		<!--  -->
+		<dependency>
+			<groupId>nz.net.ultraq.thymeleaf</groupId>
+			<artifactId>thymeleaf-layout-dialect</artifactId>
+			<version>2.5.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
 		<plugins>
 
-			<!-- Qdomain 자바 코드를 생성하는 플러그인 -->
+		<!-- Qdomain 자바 코드를 생성하는 플러그인 -->
 			<!-- Querydsl을 통해서 쿼리를 생성할 때 Qdomain 객체를 사용 -->
 			<plugin>
 				<groupId>com.mysema.maven</groupId>
