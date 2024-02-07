@@ -1,0 +1,12 @@
+com\common\JpaTestDto.class
+com\common\StringUtil.class
+com\shop\repository\ItemRepositoryTest4.class
+com\shop\repository\ItemRepositoryTest1.class
+com\shop\repository\ItemRepositoryTest3.class
+com\common\JunitTest.class
+com\common\LomBokTest.class
+com\shop\util\MessageUtilTest.class
+com\shop\service\MemberServiceTest.class
+com\common\JpaTest.class
+com\shop\repository\ItemRepositoryTest2.class
+com\shop\ShopWebApplicationTests.class

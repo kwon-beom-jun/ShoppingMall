@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+  <style>
+        .error {
+            color: #bd2130;
+        }
+    </style>
+</th:block>
+
+<div layout:fragment="content">
+
+    <div class="form-group">
+        <label for="email" th:text="${#messages.msg('login.emailAddressLabel')}">이메일주소</label>
+        <input type="email" id="email" name="email" class="form-control"
+               placeholder="sample77@shop.com">
+               <!--placeholder="${#messages.msg('login.emailAddressPlaceholder')}">-->
+    </div>
+    <div class="form-group">
+        <label for="password" th:text="${#messages.msg('login.passwordLabel')}">비밀번호</label>
+        <input type="password" id="password" name="password" class="form-control"
+               placeholder="input password">
+               <!--placeholder="${#messages.msg('login.passwordPlaceholder')}">-->
+    </div>
+    <p id="loginErrorMsg" class="error"></p>
+    <button type="button" class="btn btn-primary"
+            onclick="login()" th:text="${#messages.msg('login.loginButton')}">로그인</button>
+    <button type="button" class="btn btn-primary"
+            onclick="location.href='/members/new'" th:text="${#messages.msg('login.signupButton')}">회원가입</button>
+
+</div>
+</html>
