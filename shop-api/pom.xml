@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.shop</groupId>
-	<artifactId>shop-web</artifactId>
+	<artifactId>shop-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>shop-web</name>
+	<name>shop-api</name>
 	<description>Spring-Boot Shopping Mall Project</description>
 	<properties>
 		<java.version>11</java.version>
