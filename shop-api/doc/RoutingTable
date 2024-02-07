@@ -1,0 +1,25 @@
+
+※ 추후 VUE로 전환시 ChatGPT에게 라우터 트리구조로 변경 요청
+
+Routing Table
+
+- / (GET) = main 화면
+- /member
+- /member/new (GET) = 회원가입 폼
+- /member/new (POST) = 회원가입
+- /member/login (GET) = 로그인 페이지
+- /member/login/error (GET) = 로그인 실패시
+- /member/logout (GET) = 로그아웃 URL
+- /thymeleaf
+- /thymeleaf/ex-text (GET) = text 속성 테스트
+- /thymeleaf/ex-dto (GET) = dto 값 바인딩 테스트
+- /thymeleaf/ex-each (GET) = each 속성 테스트
+- /thymeleaf/ex-if (GET) = if 속성 테스트
+- /thymeleaf/ex-switch (GET) = switch 속성 테스트
+- /thymeleaf/ex-href (GET) = href 속성 테스트
+- /thymeleaf/ex-href-param (GET) = href 속성 파라미터 값 전달 테스트
+- /thymeleaf/ex-page-layout (GET) = layout 속성 테스트
+- /thymeleaf/ex-dto-binding-new (GET) = 객체 바인딩 테스트-1
+- /thymeleaf/ex-dto-binding (POST) = 객체 바인딩 테스트-2
+- /thymeleaf/ex-message-page (GET) = 로케일 테스트
+
