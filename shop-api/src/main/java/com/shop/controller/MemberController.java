@@ -42,11 +42,11 @@ public class MemberController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final AuthenticationManager authenticationManager; // 직접 주입받음
 
-    @GetMapping(value = "/new")
-    public String memberForm(Model model){
-        model.addAttribute("memberFormDto", new MemberFormDto());
-        return "member/memberForm";
-    }
+//    @GetMapping(value = "/new")
+//    public String memberForm(Model model){
+//        model.addAttribute("memberFormDto", new MemberFormDto());
+//        return "member/memberForm";
+//    }
 
     /**
      * <br> TODO : @Valid란?
@@ -150,12 +150,6 @@ public class MemberController {
 
 //      return "redirect:/";
         return new ResponseEntity<>(tokenDto, httpHeaders, HttpStatus.OK);
-    }
-
-
-    @GetMapping(value = "/login")
-    public String memberLoginForm() {
-        return "/member/memberLoginForm";
     }
 
     @GetMapping(value = "/login/error")

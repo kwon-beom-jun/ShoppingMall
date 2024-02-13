@@ -1,24 +1,36 @@
 // src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router';
-import LoginPage from '@/views/members/LoginPage.vue';
-import RegisterPage from '@/views/members/RegisterPage.vue';
+
+// main
 import MainPage from '@/views/MainPage.vue';
 
+// member
+import MemberLogin from '@/views/member/MemberLogin.vue';
+import MemberRegister from '@/views/member/MemberRegister.vue';
+
+// item
+import ItemRegister from '@/views/item/ItemRegister.vue';
+
 const routes = [
-  {
-    path: '/members/login',
-    name: 'login',
-    component: LoginPage,
-  },
-  {
-    path: '/members/new',
-    name: 'register',
-    component: RegisterPage,
-  },
   {
     path: '/',
     name: 'main',
     component: MainPage,
+  },
+  {
+    path: '/members/login',
+    name: 'memberLogin',
+    component: MemberLogin,
+  },
+  {
+    path: '/members/new',
+    name: 'memberRegister',
+    component: MemberRegister,
+  },
+  {
+    path: '/admin/item/new',
+    name: 'itemRegister',
+    component: ItemRegister,
   },
 ];
 

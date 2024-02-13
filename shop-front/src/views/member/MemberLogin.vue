@@ -27,7 +27,7 @@ export default {
         this.loginErrorMsg = '';
         const response = await login(this.email, this.password);
         console.log(response.data.token);
-        // this.$router.push('/');
+        this.$router.push({name: 'main'});
       } catch (error) {
         this.loginErrorMsg = error.message;
         console.log(error)
