@@ -1,18 +1,14 @@
-# 🛒 Shopping Mall
+# 🛒 BACKEND
 
-현 프로젝트를 진행하며 기존 지식을 복습 및 원리를 이해하고 기술과 이론을 실제 상황에 적용하여 깊이 있는 학습 경험을 제공
 
 <br>
 
 ## 🖥 Project Development Environment
-- IDE : Intellij
-- JDK : 11
-- Build Tool : Maven
-- SpringBoot : 2.5.2
-- Database : MySQL
-- JPA :
-- Server : Embedded Tomcat
-- (예정)AWS : EC2, RDS
+| IDE | JDK | Build Tool | SpringBoot | Database | JPA | Server | AWS (예정) |
+|---|---|---|---|---|---|---|---|
+| Intellij | 11 | Maven | 2.5.2 | MySQL | (미정의) | Embedded Tomcat | EC2, RDS |
+
+
 
 <br><br>
 
