@@ -1,13 +1,17 @@
-# 🛒 BACKEND
+# 🛒 SHOP-API ( BACKEND )
 
 
 <br>
 
 ## 🖥 Project Development Environment
-| IDE | JDK | Build Tool | SpringBoot | Database | JPA | Server | AWS (예정) |
-|---|---|---|---|---|---|---|---|
-| Intellij | 11 | Maven | 2.5.2 | MySQL | (미정의) | Embedded Tomcat | EC2, RDS |
-
+<!--
+| IDE      | JDK | Build Tool | SpringBoot | Database | JPA     | Server          | AWS (예정) |
+|----------|-----|------------|------------|----------|---------|-----------------|------------|
+| Intellij | 11  | Maven      | 2.5.2      | MySQL    | (미정의) | Embedded Tomcat | EC2, RDS   |
+-->
+| <sub>IDE</sub>      | <sub>JDK</sub> | <sub>Build Tool</sub> | <sub>SpringBoot</sub>  | <sub>Database</sub>  | <sub>JPA</sub>     | <sub>Server</sub>          | <sub>AWS (예정)</sub> |
+|---------------------|----------------|-----------------------|------------------------|----------------------|--------------------|----------------------------|-----------------------|
+| <sub>Intellij</sub> | <sub>11</sub> | <sub>Maven</sub>       | <sub>2.5.2</sub>       | <sub>MySQL</sub>     | <sub>(미정의)</sub> | <sub>Embedded Tomcat</sub> | <sub>EC2, RDS</sub>   |
 
 
 <br><br>
