@@ -14,6 +14,7 @@
 import { login } from '@/utils/auth.js';
 
 export default {
+  
   data() {
     return {
       email: '',
@@ -21,13 +22,15 @@ export default {
       loginErrorMsg: ''
     };
   },
+
   methods: {
     async handleLogin() {
       try {
         this.loginErrorMsg = '';
         const response = await login(this.email, this.password);
         console.log(response.data.token);
-        this.$router.push({name: 'main'});
+        this.$emit('login-success'); // 로그인 성공 이벤트 발생
+        this.$router.push({ name: 'main' });
       } catch (error) {
         this.loginErrorMsg = error.message;
         console.log(error)
