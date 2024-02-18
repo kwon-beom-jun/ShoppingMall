@@ -1,17 +1,18 @@
-<!-- BootStrap Vue : https://bootstrap-vue.org/docs/components/form-select -->
-<!-- Vuetify : https://vuetifyjs.com/en/components/combobox/#props -->
 <template>
-  <div id="app">
+  <v-app>
+    <v-main>
 
-    <HeaderLayout :key="componentKey" />
-    
-    <div class="content">
-      <router-view @login-success="handleLoginSuccess" />
-    </div>
-    
-    <FooterLayout />
-    
-  </div>
+      <!-- 여기에서 Vue 새로 고쳐서 저장하면 무한루프 에러문구 나오는것같음 -->
+      <HeaderLayout :key="componentKey" />
+
+      <v-container class="content">
+        <router-view @login-success="handleLoginSuccess" />
+      </v-container>
+
+      <FooterLayout />
+      
+    </v-main>
+  </v-app>
 </template>
 
 <script>
@@ -19,7 +20,6 @@ import HeaderLayout from './components/HeaderLayout.vue';
 import FooterLayout from './components/FooterLayout.vue';
 
 export default {
-
   name: 'App',
   
   components: {
@@ -42,18 +42,7 @@ export default {
 </script>
 
 <style scoped>
-html {
-    position: relative;
-    min-height: 100%;
-    margin: 0;
-}
-body {
-    min-height: 100%;
-}
-.content{
-    margin-bottom:100px;
-    margin-top: 50px;
-    margin-left: 200px;
-    margin-right: 200px;
+.content {
+  margin-top: 50px;
 }
 </style>

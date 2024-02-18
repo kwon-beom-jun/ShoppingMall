@@ -2,9 +2,10 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import axios from 'axios';
+import vuetify from './plugins/vuetify'
+import { loadFonts } from './plugins/webfontloader'
 
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+loadFonts()
 
 const app = createApp(App);
 
@@ -24,5 +25,6 @@ axios.interceptors.request.use(config => {
 
 app.config.globalProperties.$axios = axios; // 전역으로 axios 설정
 app.use(router);
+app.use(vuetify)
 
 app.mount('#app');

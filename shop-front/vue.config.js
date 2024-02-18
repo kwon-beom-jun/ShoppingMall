@@ -12,5 +12,11 @@ module.exports = {
         pathRewrite: {'^/api' : ''} // '/api'를 제거하고 프록시
       }
     }
+  },
+
+  pluginOptions: {
+    vuetify: {
+			// https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vuetify-loader
+		}
   }
 };

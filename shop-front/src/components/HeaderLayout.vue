@@ -1,60 +1,66 @@
 <template>
-  <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+  <v-app-bar app color="primary" dark>
+    <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-    <button class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03"
-            aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <v-toolbar-title>
+      <router-link to="/" class="router-link">Shop</router-link>
+    </v-toolbar-title>
 
-    <a class="navbar-brand" href="/">Shop</a>
+    <v-spacer></v-spacer>
 
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li class="nav-item admin-item" v-if="isAdmin">
-          <a class="nav-link" href="/admin/item/new">상품 등록</a>
-        </li>
-        <li class="nav-item admin-item" v-if="isAdmin">
-          <a class="nav-link" href="/admin/items">상품 관리</a>
-        </li>
-        <li class="nav-item user-item" v-if="isUser">
-          <a class="nav-link" href="/cart">장바구니</a>
-        </li>
-        <li class="nav-item user-item" v-if="isUser">
-          <a class="nav-link" href="/orders">구매이력</a>
-        </li>
+    <v-text-field
+      v-model="searchQuery"
+      label="검색"
+      single-line
+      hide-details
+    ></v-text-field>
 
-        <li class="nav-item" v-if="!isLoggedIn">
-          <a class="nav-link" href="/members/login">로그인</a>
-        </li>
-        <li class="nav-item" v-if="!isLoggedIn">
-          <a class="nav-link" href="/members/new">회원가입</a>
-        </li>
-        <li class="nav-item" v-if="isLoggedIn">
-          <a class="nav-link" @click="logout">로그아웃</a>
-        </li>
-      </ul>
-    </div>
-    
-    <div>
-      <input v-model="searchQuery" class="form-control mr-sm-2" type="search" placeholder="검색" aria-label="검색">
-    </div>
-    <div>
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">검색</button>
-    </div>
-  
-    <div class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        &nbsp;Language&nbsp;
-      </a>
-      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-        <a class="dropdown-item" onclick="setLang('en_US')">영어</a>
-        <a class="dropdown-item" onclick="setLang('ko_KR')">한국어</a>
-      </div>
-    </div>
+    <v-btn icon>
+      <v-icon>mdi-magnify</v-icon>
+    </v-btn>
 
-  </nav>
+    <v-menu offset-y>
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn text v-bind="attrs" v-on="on">
+          Language
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item @click="setLang('en_US')">
+          <v-list-item-title>영어</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="setLang('ko_KR')">
+          <v-list-item-title>한국어</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+  </v-app-bar>
+
+  <v-navigation-drawer v-model="drawer" app color="#FDFBFF">
+    <v-list>
+      <v-list-item v-if="isAdmin" href="/admin/item/new">
+        <v-list-item-title>상품 등록</v-list-item-title>
+      </v-list-item>
+      <v-list-item v-if="isAdmin" href="/admin/items">
+        <v-list-item-title>상품 관리</v-list-item-title>
+      </v-list-item>
+      <v-list-item v-if="isUser" href="/cart">
+        <v-list-item-title>장바구니</v-list-item-title>
+      </v-list-item>
+      <v-list-item v-if="isUser" href="/orders">
+        <v-list-item-title>구매이력</v-list-item-title>
+      </v-list-item>
+      <v-list-item v-if="!isLoggedIn" href="/members/login">
+        <v-list-item-title>로그인</v-list-item-title>
+      </v-list-item>
+      <v-list-item v-if="!isLoggedIn" href="/members/new">
+        <v-list-item-title>회원가입</v-list-item-title>
+      </v-list-item>
+      <v-list-item v-if="isLoggedIn" @click="logout">
+        <v-list-item-title>로그아웃</v-list-item-title>
+      </v-list-item>
+    </v-list>
+  </v-navigation-drawer>
 </template>
 
 <script>
@@ -88,6 +94,7 @@ export default {
 
   data() {
     return {
+      drawer: false,
       // isLoggedIn: false, // 사용자 로그인 상태
       // isAdmin: false, // 관리자 여부
       // isUser: false, // 일반 사용자 여부
@@ -103,12 +110,22 @@ export default {
     search() {
       // 검색 로직
     },
-    logout() {
+    async logout() {
       logout();
+      await this.$router.push({name: 'main'});
       location.reload();
-      this.$router.push({name: 'main'});
     }
   }
 };
 </script>
-  
+
+<style scoped>
+.router-link {
+  text-decoration: none; /* 하이퍼링크 텍스트에 밑줄 제거 */
+  color: inherit; /* 부모 요소의 글자색을 상속받음 */
+  cursor: pointer; /* 커서 모양을 포인터로 변경하여 클릭 가능한 것처럼 보이도록 함 */
+}
+.v-text-field{
+  max-width: 20%;
+}
+</style>
