@@ -1,9 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.shop.ShopWebApplicationTests
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.778 s <<< FAILURE! - in com.shop.ShopWebApplicationTests
-contextLoads  Time elapsed: 0.007 s  <<< ERROR!
-java.lang.IllegalStateException: Failed to load ApplicationContext
-Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jwtTokenProvider' defined in file [C:\Users\qjawn\Desktop\intellij\workspace\shopping-mall\shop-web\target\classes\com\shop\config\jwt\JwtTokenProvider.class]: Unexpected exception during bean creation; nested exception is java.lang.IllegalArgumentException: Could not resolve placeholder 'jwt.secret' in value "${jwt.secret}"
-Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'jwt.secret' in value "${jwt.secret}"
-
