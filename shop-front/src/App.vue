@@ -35,7 +35,9 @@ export default {
 
   methods: {
     handleLoginSuccess() {
-      this.componentKey += 1; // HeaderLayout 인스턴스 폐기 후 새로 생성(컴포넌트 리로드 효과)
+      // HeaderLayout 인스턴스 폐기 후 새로 생성(컴포넌트 리로드 효과)
+      this.componentKey += 1;
+      console.log("componentKey updated:", this.componentKey);
     }
   }
 };

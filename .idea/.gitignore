@@ -1,19 +1,16 @@
-################# shop-backend #################
-../shelf/
-../workspace.xml
-../shop-api/target/
+workspace.xml
 
+################# shop-backend #################
+../shop-api/target/
 
 
 ################# shop-front #################
 ../shop-front/.DS_Store
 ../shop-front/node_modules/
-../shop-front/src/
-../shop-front/dist
 
 # local env files
-../shop-front/.env.local
-../shop-front/.env.*.local
+#../shop-front/.env.local
+#../shop-front/.env.*.local
 
 # Log files
 ../shop-front/npm-debug.log*
@@ -22,7 +19,6 @@
 ../shop-front/pnpm-debug.log*
 
 # Editor directories and files
-../shop-front/.idea
 ../shop-front/.vscode
 ../shop-front/*.suo
 ../shop-front/*.ntvs*
