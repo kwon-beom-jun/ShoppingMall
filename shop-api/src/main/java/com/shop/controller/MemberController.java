@@ -22,12 +22,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequestMapping("/members")
 @Controller
@@ -78,23 +82,28 @@ public class MemberController {
      * <br>         명시적으로 데이터를 추가할 수 있음. 이 방식으로 추가된 데이터는 뷰에서 사용할 수 있음
      */
     @PostMapping(value = "/new")
-    public String newMember(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model){
+    //public ResponseEntity newMember(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model){
+    public ResponseEntity<?> newMember(@RequestBody @Valid MemberFormDto memberFormDto, BindingResult bindingResult){
 
         // bindingResult.hasErrors()를 호출하여 에러가 있다면 회원가입 페이지로 이동
         if (bindingResult.hasErrors()) {
-            return "member/memberForm";
+            Map<String, String> errors = bindingResult.getFieldErrors().stream()
+                    .collect(Collectors.toMap(
+                            FieldError::getField,
+                            fieldError -> fieldError.getDefaultMessage() != null ? fieldError.getDefaultMessage() : "Unknown error"
+                    ));
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
 
         try {
             Member member = Member.createMember(memberFormDto, passwordEncoder);
             memberService.saveMember(member);
         } catch (IllegalStateException e) {
-            // 회원 가입 시 중복 회원 가입 예외가 발생하면 에러 메시지를 뷰로 전달
-            model.addAttribute("errorMessage", e.getMessage());
-            return "member/memberForm";
+            // 중복 회원 가입 및 비즈니스 로직 오류가 발생하면 에러 메시지를 뷰로 전달
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
 
-        return "redirect:/";
+        return new ResponseEntity<>("회원 가입 성공", HttpStatus.OK);
     }
 
     /**
