@@ -34,6 +34,10 @@ import org.springframework.web.filter.CorsFilter;
  * <br>       비밀번호 암호화를 위해 passwordEncoder를 지정
  * <br>     - auth.userDetailsService()는 UserDetailsService 값을 AuthenticationManagerBuilder에 저장 후
  * <br>       AuthenticationManagerBuilder를 반환
+ * <br> 
+ * <br> 인증이 필요한 경우 : 상품 주문
+ * <br> 인증이 필요 없는 경우 : 상품 상세 페이지 조회
+ * <br> 관리자 권한이 필요한 경우 : 상품 등록
  */
 @Configuration
 @EnableWebSecurity
