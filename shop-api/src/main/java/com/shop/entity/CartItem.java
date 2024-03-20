@@ -11,8 +11,6 @@ import javax.persistence.*;
  * <br>     같은 상품을 여러 개 주문할 수도 있으므로 개수 설정
  * <br>
  * <br>     하나의 Item (즉, 상품)이 여러 CartItem 인스턴스 (즉, 장바구니 아이템)에 연결될 수 있음을 의미
- * <br>     ex) 온라인 쇼핑몰에서 여러 고객이 같은 상품을 각자의 장바구니에 담을 수 있음
- * <br>         각각의 장바구니 아이템(CartItem)은 동일한 상품(Item)을 참조하지만, 각자 다른 장바구니에 속해 있음
  * <br>
  * <br>     @JoinColumn
  * <br>         엔티티와 매핑되는 테이블에 @JoinColumn 어노테이션의 name으로 설정한 값이 foreign key로 추가
