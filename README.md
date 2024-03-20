@@ -6,14 +6,14 @@
 
 ## 🖥 Project Development Environment
 > ### SHOP-API
-> | <sub>IDE</sub>      | <sub>JDK</sub> | <sub>Build Tool</sub> | <sub>SpringBoot</sub>  | <sub>Database</sub>  | <sub>JPA</sub>     | <sub>Server</sub>          | <sub>AWS (예정)</sub> |
-> |---------------------|----------------|-----------------------|------------------------|----------------------|--------------------|----------------------------|-----------------------|
-> | <sub>Intellij</sub> | <sub>11</sub> | <sub>Maven</sub>       | <sub>2.5.2</sub>       | <sub>MySQL</sub>     | <sub>(미정의)</sub> | <sub>Embedded Tomcat</sub> | <sub>EC2, RDS</sub>   |
+> | <sub>IDE</sub>      | <sub>JDK</sub> | <sub>Build Tool</sub> | <sub>SpringBoot</sub>  | <sub>Database</sub>  | <sub>JPA</sub>   | <sub>Server</sub>          | <sub>AWS (예정)</sub> |
+> |---------------------|----------------|-----------------------|------------------------|----------------------|------------------|----------------------------|-----------------------|
+> | <sub>Intellij</sub> | <sub>11</sub> | <sub>Maven</sub>       | <sub>2.5.2</sub>       | <sub>MySQL</sub>     | <sub>2.5.2</sub> | <sub>Embedded Tomcat</sub> | <sub>EC2, RDS</sub>   |
 > 
 > ### SHOP-FRONT
-> | <sub>IDE</sub>     | <sub>Node</sub>    | <sub>Npm</sub>    | <sub>VUE</sub>    | <sub>Router</sub>  | <sub>Axios</sub>    | <sub>BootStrap</sub> |
-> |--------------------|--------------------|-------------------|-------------------|--------------------|---------------------|----------------------|
-> | <sub>VSCode</sub>  | <sub>16.16.0</sub> | <sub>8.11.0</sub> | <sub>3.2</sub>    | <sub>4.2.5</sub>   | <sub>1.6.7</sub>    | <sub>5.3.2</sub>     |
+> | <sub>IDE</sub>     | <sub>Node</sub>    | <sub>Npm</sub>    | <sub>VUE</sub>    | <sub>Router</sub>  | <sub>Axios</sub>    | <sub>Vuetify</sub> |
+> |--------------------|--------------------|-------------------|-------------------|--------------------|---------------------|--------------------|
+> | <sub>VSCode</sub>  | <sub>16.16.0</sub> | <sub>8.11.0</sub> | <sub>3.2</sub>    | <sub>4.2.5</sub>   | <sub>1.6.7</sub>    | <sub>3.0.0</sub>   |
 
 <br><br>
 
