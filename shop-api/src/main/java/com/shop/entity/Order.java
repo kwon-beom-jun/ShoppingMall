@@ -42,6 +42,22 @@ import java.util.List;
  * <br>     데이터 일관성 유지
  * <br>         JPA는 관계의 양쪽 엔티티 간의 데이터 일관성을 유지하는 데 도움을 줌
  * <br>
+ * <br> TODO : 영속성 전이(CASCADE)란?
+ * <br>     엔티티의 상태를 변경할 때 해당 엔티티와 연관된 엔티티의 상태 변화를 전파시키는 옵션
+ * <br>     단일 엔티티에 완전히 종속적이고 부모 엔티티와 자식 엔티티의 라이프 사이클이 유사할 때 활용 추천
+ * <br>     무분별하게 사용할 경우 삭제되지 말아야 할 데이터가 삭제될 수 있으므로 조심해서 사용
+ * <br>
+ * <br>     CASCADE 종류
+ * <br>         ALL     : 부모 엔티티의 영속성 상태 변화를 자식 엔티티에 모두 전이
+ * <br>         PERSIST : 부모 엔티티가 영속화될 때 자식 엔티티도 영속화
+ * <br>         MERGE   : 부모 엔티티가 병합될 때 자식 엔티티도 병합
+ * <br>         REMOVE  : 부모 엔티티가 삭제될 때 연관된 자식 엔티티도 삭제
+ * <br>         REFRESH : 부모 엔티티가 refresh 되면 연관된 자식 엔티티도 refresh
+ * <br>         DETACH  : 부모 엔티티가 detach 되면 연관된 자식 엔티티도 detach 상태로 변경
+ * <br>
+ * <br>
+ * <br>
+ * <br>
  */
 @Entity
 @Table(name = "orders") // DB에 정렬때 사용하는 order 키워드가 있어서 orders로 지정
@@ -72,7 +88,7 @@ public class Order {
      * <br>     - 속성값이 "order"인 이유는 OrderItem에 있는 Order에 의해 관리된다는 의미
      * <br>     - mappedBy 속성에 지정되는 값은, 반드시 관계의 반대편(주인이 아닌 쪽)에 있는 필드의 이름이어야 함
      */
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>(); // 하나의 주문이 여러 개의 주문 상품을 갖음
 
     private LocalDateTime regTime;
