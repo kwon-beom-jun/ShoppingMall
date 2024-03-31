@@ -55,9 +55,6 @@ import java.util.List;
  * <br>         REFRESH : 부모 엔티티가 refresh 되면 연관된 자식 엔티티도 refresh
  * <br>         DETACH  : 부모 엔티티가 detach 되면 연관된 자식 엔티티도 detach 상태로 변경
  * <br>
- * <br>
- * <br>
- * <br>
  */
 @Entity
 @Table(name = "orders") // DB에 정렬때 사용하는 order 키워드가 있어서 orders로 지정
@@ -88,7 +85,7 @@ public class Order {
      * <br>     - 속성값이 "order"인 이유는 OrderItem에 있는 Order에 의해 관리된다는 의미
      * <br>     - mappedBy 속성에 지정되는 값은, 반드시 관계의 반대편(주인이 아닌 쪽)에 있는 필드의 이름이어야 함
      */
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>(); // 하나의 주문이 여러 개의 주문 상품을 갖음
 
     private LocalDateTime regTime;
