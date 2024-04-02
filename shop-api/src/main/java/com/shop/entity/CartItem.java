@@ -48,11 +48,11 @@ public class CartItem {
     foreign key (item_id)
     references item
 */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
     private Cart cart; // 하나의 장바구니에는 여러개의 상품이 담을 수 있음
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item; // 상품의 정보를 알아야 하고, 하나의 상품은 여러 장바구니의 장바구니 상품으로 담길 수 있음
 

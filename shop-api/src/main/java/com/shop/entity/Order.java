@@ -68,7 +68,7 @@ public class Order {
     private Long id;
 
     // Order 인스턴스에 Member 데이터를 셋팅해도 DB Order Insert때는 member_id 값만 들어감
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -85,7 +85,7 @@ public class Order {
      * <br>     - 속성값이 "order"인 이유는 OrderItem에 있는 Order에 의해 관리된다는 의미
      * <br>     - mappedBy 속성에 지정되는 값은, 반드시 관계의 반대편(주인이 아닌 쪽)에 있는 필드의 이름이어야 함
      */
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems = new ArrayList<>(); // 하나의 주문이 여러 개의 주문 상품을 갖음
 
     private LocalDateTime regTime;
