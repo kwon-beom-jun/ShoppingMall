@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.Optional;
 
 /**
- * <br> TODO : Auditing
+ * <br> TODO : Auditing-1
  * <br>     'Audit'의 사전적 의미는 '감시하다'
  * <br>     엔티티의 생성과 수정을 감시
  * <br>     AuditConfig 클래스에서 @EnableJpaAuditing 어노테이션을 사용하여 Audit 활성화
