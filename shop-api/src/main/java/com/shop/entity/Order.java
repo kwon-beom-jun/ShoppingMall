@@ -60,7 +60,7 @@ import java.util.List;
 @Table(name = "orders") // DB에 정렬때 사용하는 order 키워드가 있어서 orders로 지정
 @Getter
 @Setter
-public class Order {
+public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -87,9 +87,5 @@ public class Order {
      */
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems = new ArrayList<>(); // 하나의 주문이 여러 개의 주문 상품을 갖음
-
-    private LocalDateTime regTime;
-
-    private LocalDateTime updateTime;
 
 }
