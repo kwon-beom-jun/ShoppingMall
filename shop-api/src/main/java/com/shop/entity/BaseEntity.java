@@ -10,7 +10,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 
 /**
- * <br> TODO : Auditing-3 (BaseEntity) | TestCase : MemberTest.class
+ * <br> TODO : Auditing-3 (BaseEntity : 등록일, 수정일, 등록자, 수정자) | TestCase : MemberTest.class
  * <br>     BaseTimeEntity을 상속받아 등록일, 수정일, 등록자, 수정자를 모두 갖음
  */
 @EntityListeners(value = {AuditingEntityListener.class})
