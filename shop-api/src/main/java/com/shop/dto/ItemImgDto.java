@@ -17,6 +17,7 @@ import org.modelmapper.ModelMapper;
  * <br>         - 해당 라이브러리는 필드의 이름과 자료형이 같으면 getter, setter를 통해 값을 복사해서 객체를 반환
  * <br>
  */
+// 상품 저장 이후 상품 이미지에 대한 데이터를 전달할 DTO
 @Getter @Setter
 public class ItemImgDto {
 
@@ -36,6 +37,7 @@ public class ItemImgDto {
      * <br> ItemImg 엔티티 객체를 파라미터로 받아서 ItemImg 객체의 자료형과 멤버변수의 이름이 같을 때
      * <br> ItemImgDto로 값을 복사해서 반환.
      * <br> static 메소드로 선언해 ItemImgDto 객체를 생성하지 않아도 호출할 수 있도록 구현
+     * <br> itemImg → ItemImgDto 변환
      */
     public static ItemImgDto of(ItemImg itemImg) {
         return modelMapper.map(itemImg,ItemImgDto.class);
