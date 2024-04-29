@@ -10,6 +10,7 @@ import MemberLogin from '@/views/member/MemberLogin.vue';
 import MemberRegister from '@/views/member/MemberRegister.vue';
 
 // item
+import itemForm from '@/views/item/itemForm.vue';
 import ItemRegister from '@/views/item/ItemRegister.vue';
 
 const routes = [
@@ -30,15 +31,21 @@ const routes = [
   },
   {
     path: '/admin/item/new',
+    name: 'itemForm',
+    component: itemForm,
+    beforeEnter: async (to, from, next) => {
+      const isAdmin = await authAdminCheck();
+      // 관리자면 라우트 계속 진행 : 관리자가 아니면 메인 페이지로 리디렉션
+      !isAdmin ? next({ name: 'main' }) : next();
+    }
+  },
+  {
+    path: '/admin/item/new2',
     name: 'itemRegister',
     component: ItemRegister,
     beforeEnter: async (to, from, next) => {
       const isAdmin = await authAdminCheck();
-      if (!isAdmin) {
-        next({ name: 'main' }); // 관리자가 아니면 메인 페이지로 리디렉션
-      } else {
-        next(); // 관리자면 라우트 계속 진행
-      }
+      !isAdmin ? next({ name: 'main' }) : next();
     }
   },
 ];

@@ -27,12 +27,16 @@ export async function authAdminCheck() {
   var result = false;
   // SecurityConfig에서 설정해두었음
   // '/admin' 경로 시 백엔드에서 Admin 유저인지 확인하여 아니면 403 에러 보냄
-  await axios.get('/api/admin/item/new')
+  await axios.get('/api/admin/access-check')
     .then(() => {
       result = true;
     })
-    .catch(() => {
-      alert("관리자 페이지입니다.");
+    .catch((e) => {
+      if (e.response && e.response.status === 500) {
+        alert(e); // AxiosError: Request failed with status code 500
+      } else {
+        alert("관리자 페이지입니다.");
+      }
     });
     return result;
 }
