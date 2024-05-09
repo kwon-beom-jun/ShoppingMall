@@ -102,11 +102,11 @@ import axios from 'axios';
 // 상태 및 상수 정의
 const itemFormDto = ref({
   id: null, // 수정 시 해당 아이템의 ID. 새로 등록 시에는 null.
-  itemSellStatus: 'SELL',
   itemNm: '',
   price: null,
-  stockNumber: null,
   itemDetail: '',
+  stockNumber: null,
+  itemSellStatus: 'SELL',
   itemImgFiles: []
 });
 const previewImageUrls = ref([]);
@@ -142,7 +142,9 @@ function updateFileInput(value) {
 
 // 폼 제출 함수
 async function submitForm() {
+
   const formData = new FormData();
+  itemFormDto.value.id = 11;
 
   // itemFormDto의 기타 필드들을 formData에 추가
   for (const [key, value] of Object.entries(itemFormDto.value)) {
@@ -150,6 +152,10 @@ async function submitForm() {
       formData.append(key, value);
     }
   }
+
+
+  // 파일이 없는 경우 등록 하라고 alert 추가해주기
+
 
   // 파일이 있을 경우 formData에 추가
   if (itemFormDto.value.itemImgFiles && itemFormDto.value.itemImgFiles.length > 0) {
@@ -161,15 +167,25 @@ async function submitForm() {
   try {
     if (isEditMode.value) {
       // 수정 로직을 구현
-      const response = await axios.put(`/api/admin/item/${itemFormDto.value.id}`, formData);
-      console.log(response.data);
+      const response = await axios.patch(`/api/admin/item/${itemFormDto.value.id}`, formData);
+      console.log('수정 성공');
     } else {
       // 등록 로직을 구현
       const response = await axios.post('/api/admin/item/new', formData);
-      console.log(response.data);
+      console.log('등록 성공');
     }
   } catch (error) {
-    console.error('There was an error submitting the form:', error);
+    if (error.response) {
+      // 서버에서 응답으로 오류 메시지를 보냈을 때
+      console.log("서버 에러 메시지:", error.response.data);
+      // 여기서 error.response.data가 "상품 값을 확인해 주세요."를 포함하고 있을 수 있습니다.
+    } else if (error.request) {
+      // 요청은 이루어졌으나 응답을 받지 못했을 때
+      console.log("No response received");
+    } else {
+      // 요청 설정 중 문제가 발생했을 때
+      console.log("Error", error.message);
+    }
   }
 }
 
