@@ -76,7 +76,7 @@
           ></v-file-input>
           <!-- 저장 버튼 -->
           <v-btn color="primary" block large type="submit">
-            {{ itemFormDto.id ? '수정' : '저장' }}
+            {{ isEditMode ? '수정' : '저장' }}
           </v-btn>
         </v-col>
         <v-col cols="3"> <!-- 이미지 미리보기 부분 -->
@@ -101,7 +101,7 @@ import axios from 'axios';
 
 // 상태 및 상수 정의
 const itemFormDto = ref({
-  id: null, // 수정 시 해당 아이템의 ID. 새로 등록 시에는 null.
+  id: -1,
   itemNm: '',
   price: null,
   itemDetail: '',
@@ -109,14 +109,24 @@ const itemFormDto = ref({
   itemSellStatus: 'SELL',
   itemImgFiles: []
 });
+const labels = {
+  itemNm: '상품명',
+  price: '가격',
+  itemDetail: '상품 상세 내용',
+  stockNumber: '재고',
+  itemSellStatus: '판매 상태'
+};
+const getLabel = (key) => {
+  return labels[key] || key;
+};
 const previewImageUrls = ref([]);
 const itemSellStatusOptions = ['SELL', 'SOLD_OUT'];
 const fileRules = [
   v => !v || (v.length === 0 || v.some(file => file.size <= 20000000)) || '파일 크기는 20MB 이하여야 합니다.'
 ];
 
-// 수정인지 등록인지 판별하는 계산된 속성
-const isEditMode = computed(() => itemFormDto.value.id != null);
+// 수정인지 등록인지 판별
+const isEditMode = computed(() => itemFormDto.value.id != -1);
 
 // 파일 업로드 처리 함수
 function handleFileUpload(event) {
@@ -144,18 +154,22 @@ function updateFileInput(value) {
 async function submitForm() {
 
   const formData = new FormData();
-  itemFormDto.value.id = 11;
-
+  
   // itemFormDto의 기타 필드들을 formData에 추가
   for (const [key, value] of Object.entries(itemFormDto.value)) {
+    if (key != 'id' && key != 'itemImgFiles' && ( value == null || value.trim() == '' ) ) {
+      alert('"' + getLabel(key) + '" 을 확인해주세요.');
+      return;
+    }
     if (key !== 'itemImgFiles') { // 파일이 아닌 필드들을 처리
       formData.append(key, value);
+    } else {
+      if (value.length == 0) {
+        alert('첫번째 상품 이미지는 필수 입력 값 입니다.');
+        return;
+      }
     }
   }
-
-
-  // 파일이 없는 경우 등록 하라고 alert 추가해주기
-
 
   // 파일이 있을 경우 formData에 추가
   if (itemFormDto.value.itemImgFiles && itemFormDto.value.itemImgFiles.length > 0) {
@@ -169,16 +183,17 @@ async function submitForm() {
       // 수정 로직을 구현
       const response = await axios.patch(`/api/admin/item/${itemFormDto.value.id}`, formData);
       console.log('수정 성공');
+      console.log(response);
     } else {
       // 등록 로직을 구현
       const response = await axios.post('/api/admin/item/new', formData);
       console.log('등록 성공');
+      console.log(response);
     }
   } catch (error) {
     if (error.response) {
       // 서버에서 응답으로 오류 메시지를 보냈을 때
       console.log("서버 에러 메시지:", error.response.data);
-      // 여기서 error.response.data가 "상품 값을 확인해 주세요."를 포함하고 있을 수 있습니다.
     } else if (error.request) {
       // 요청은 이루어졌으나 응답을 받지 못했을 때
       console.log("No response received");
