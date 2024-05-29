@@ -3,6 +3,7 @@ package com.shop.controller;
 import com.shop.dto.ItemFormDto;
 import com.shop.service.ItemService;
 import com.shop.util.ResponseUtil;
+import com.shop.util.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,30 +58,30 @@ public class ItemController {
      */
     // FIXME : (required = false) 없는게 맞나? 돌려줄때 400 에러가 아닌 이유를 보내야해서 있어야 하나?
     @PostMapping(value = "/admin/item/new", consumes = {"multipart/form-data"})
-    public ResponseEntity itemNew(@ModelAttribute @Valid ItemFormDto itemFormDto,
+    public ResponseEntity itemNew(@Valid ItemFormDto itemFormDto,
                                   BindingResult bindingResult,
                                   @RequestPart(required = false) MultipartFile[] itemImgFiles){
-        logger.info("〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
-        logger.info("〓〓〓〓〓〓〓〓〓〓 상품 등록 시작 〓〓〓〓〓〓〓〓〓〓");
-        logger.info("〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
+        logger.info(StringUtil.controllerStartLog("상품 등록 시작"));
 
+        for (Object object:itemImgFiles) {
+            System.out.println(object);
+        }
         if(bindingResult.hasErrors()){
-            return ResponseUtil.responseBadRequest("상품 값을 확인해 주세요.");
+            return ResponseUtil.responseBadRequest("상품 입력값들을 확인해 주세요.");
         }
         if (itemImgFiles == null) {
             return ResponseUtil.responseBadRequest("첫번째 상품 이미지는 필수 입력 값 입니다.");
         }
 
         // 상품 등록 로직
+        // 상품 등록시 시퀀스로 올라갈것으로 예상(등록은 id값이 없음)
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(value = "/admin/item/{itemId}")
     public ResponseEntity itemDtl(@PathVariable("itemId") Long itemId){
-        logger.info("〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
-        logger.info("〓〓〓〓〓〓〓〓〓〓 단일 상품 세부정보 검색 〓〓〓〓〓〓〓〓〓〓");
-        logger.info("〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
+        logger.info(StringUtil.controllerStartLog("단일 상품 세부정보 검색"));
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -89,12 +90,10 @@ public class ItemController {
     public ResponseEntity itemUpdate(@ModelAttribute @Valid ItemFormDto itemFormDto,
                                      BindingResult bindingResult,
                                      @RequestPart(required = false) MultipartFile[] itemImgFiles){
-        logger.info("〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
-        logger.info("〓〓〓〓〓〓〓〓〓〓 상품 수정 시작 〓〓〓〓〓〓〓〓〓〓");
-        logger.info("〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
+        logger.info(StringUtil.controllerStartLog("상품 수정 시작"));
 
         if(bindingResult.hasErrors()){
-            return ResponseUtil.responseBadRequest("상품 값을 확인해 주세요.");
+            return ResponseUtil.responseBadRequest("상품 입력값을 확인해 주세요.");
         }
         if (itemImgFiles == null) {
             return ResponseUtil.responseBadRequest("첫번째 상품 이미지는 필수 입력 값 입니다.");
