@@ -31,6 +31,10 @@ public class ItemController {
     private final ItemService itemService;
 
     /**
+     * <br> TODO : consumes & produces
+     * <br>     consumes : 들어오는 데이터 타입을 정의할때 이용
+     * <br>     produces : 반환하는 데이터 타입을 정의
+     * <br>
      * <br> TODO : @ModelAttribute VS @RequestBody
      * <br>     @ModelAttribute
      * <br>      - 클라이언트가 보내는 HTTP 파라미터들을 특정 Java Object에 바인딩(맵핑)
@@ -63,26 +67,31 @@ public class ItemController {
                                   @RequestPart(required = false) MultipartFile[] itemImgFiles){
         logger.info(StringUtil.controllerStartLog("상품 등록 시작"));
 
-        for (Object object:itemImgFiles) {
-            System.out.println(object);
-        }
-        if(bindingResult.hasErrors()){
+        if(bindingResult.hasErrors())
             return ResponseUtil.responseBadRequest("상품 입력값들을 확인해 주세요.");
-        }
-        if (itemImgFiles == null) {
+        if (itemImgFiles == null)
             return ResponseUtil.responseBadRequest("첫번째 상품 이미지는 필수 입력 값 입니다.");
+
+        if (itemFormDto.getId() != -1) {
+            return ResponseUtil.responseBadRequest("상품 ID가 조작되었습니다.");
+        } else {
+            // MySQL(Id-KEY) : GenerationType.IDENTITY
+            // 상품 등록시 자동 생성되므로 null 셋팅
+            itemFormDto.setId(null);
         }
 
-        // 상품 등록 로직
-        // 상품 등록시 시퀀스로 올라갈것으로 예상(등록은 id값이 없음)
-
+        try {
+            // 상품 등록
+            Long id = itemService.saveItem(itemFormDto, itemImgFiles);
+        } catch (Exception e) {
+            return ResponseUtil.responseInternalServerError("상품 등록 중 에러가 발생하였습니다.", e);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(value = "/admin/item/{itemId}")
     public ResponseEntity itemDtl(@PathVariable("itemId") Long itemId){
         logger.info(StringUtil.controllerStartLog("단일 상품 세부정보 검색"));
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -92,12 +101,10 @@ public class ItemController {
                                      @RequestPart(required = false) MultipartFile[] itemImgFiles){
         logger.info(StringUtil.controllerStartLog("상품 수정 시작"));
 
-        if(bindingResult.hasErrors()){
+        if(bindingResult.hasErrors())
             return ResponseUtil.responseBadRequest("상품 입력값을 확인해 주세요.");
-        }
-        if (itemImgFiles == null) {
+        if (itemImgFiles == null)
             return ResponseUtil.responseBadRequest("첫번째 상품 이미지는 필수 입력 값 입니다.");
-        }
 
         // 상품 수정 로직
 
