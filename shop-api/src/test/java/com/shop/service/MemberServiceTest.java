@@ -20,7 +20,6 @@ class MemberServiceTest {
 
     @Autowired
     MemberService memberService;
-
     @Autowired
     PasswordEncoder passwordEncoder;
 

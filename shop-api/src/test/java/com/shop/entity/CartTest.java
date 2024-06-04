@@ -30,10 +30,8 @@ public class CartTest {
 
     @Autowired
     CartRepository cartRepository;
-
     @Autowired
     MemberRepository memberRepository;
-
     @Autowired
     PasswordEncoder passwordEncoder;
 

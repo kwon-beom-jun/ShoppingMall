@@ -54,7 +54,6 @@ class ItemRepositoryTest3 {
 
     @Autowired
     ItemRepository itemRepository;
-
     @PersistenceContext
     EntityManager em;
 

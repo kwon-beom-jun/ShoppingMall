@@ -43,13 +43,10 @@ class OrderTest {
 
     @Autowired
     OrderRepository orderRepository;
-
     @Autowired
     ItemRepository itemRepository;
-
     @Autowired
     MemberRepository memberRepository;
-
     @Autowired
     OrderItemRepository orderItemRepository;
 

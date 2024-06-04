@@ -2,9 +2,10 @@
   <v-container>
     <v-form ref="form" @submit.prevent="submitForm">
       <v-row>
-        <v-col cols="9"> <!-- 입력 필드 부분 -->
+        <v-col cols="12">
+          <!-- 입력 필드 부분 -->
           <!-- 상품명과 판매 상태 -->
-          <v-row>
+          <v-row dense>
             <v-col cols="9">
               <v-text-field
                 v-model="itemFormDto.itemNm"
@@ -27,7 +28,7 @@
             </v-col>
           </v-row>
           <!-- 가격과 재고 -->
-          <v-row>
+          <v-row dense>
             <v-col cols="9">
               <v-text-field
                 v-model="itemFormDto.price"
@@ -60,46 +61,67 @@
             dense
             :rules="[v => !!v || '상세 내용 입력은 필수입니다']"
           ></v-textarea>
-          <!-- 상품 이미지 업로드 -->
-          <v-file-input
-            v-model="itemFormDto.itemImgFiles"
-            label="상품 이미지"
-            accept="image/*"
-            multiple
-            clearable
-            show-size
-            dense
-            :rules="fileRules"
-            placeholder="파일을 선택하세요"
-            @change="handleFileUpload"
-            @input="updateFileInput"
-          ></v-file-input>
-          <!-- 저장 버튼 -->
-          <v-btn color="primary" block large type="submit">
-            {{ isEditMode ? '수정' : '저장' }}
-          </v-btn>
-        </v-col>
-        <v-col cols="3"> <!-- 이미지 미리보기 부분 -->
-          <div class="image-preview-container" style="height: 100%; overflow-y: auto;">
-            <v-row v-for="(url, index) in previewImageUrls" :key="index">
-              <v-col cols="12" class="image-preview">
-                <img :src="url" alt="Image Preview">
+          <!-- 상품 이미지 등록/수정 -->
+          <div class="image-grid">
+            <v-row dense>
+              <v-col cols="4" v-for="index in 6" :key="index">
+                <div class="image-box" @click="showFullScreenImage(index - 1)">
+                  <img
+                    v-if="previewImageUrls[index - 1]"
+                    :src="previewImageUrls[index - 1]"
+                    alt="Image Preview"
+                  >
+                </div>
+                <v-btn
+                  v-if="!previewImageUrls[index - 1]"
+                  @click="triggerFileInput(index - 1)"
+                  block
+                  small
+                >
+                  등록
+                </v-btn>
+                <v-btn
+                  v-else
+                  @click="triggerFileInput(index - 1)"
+                  block
+                  small
+                >
+                  수정
+                </v-btn>
+                <v-btn
+                  v-if="previewImageUrls[index - 1]"
+                  @click="removeImage(index - 1)"
+                  block
+                  small
+                  color="error"
+                >
+                  제거
+                </v-btn>
               </v-col>
             </v-row>
           </div>
+          <!-- 이미지 아래에 저장 버튼 -->
+          <v-row dense>
+            <v-col cols="12">
+              <v-btn color="primary" block large type="submit">
+                {{ isEditMode ? '수정' : '저장' }}
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
     </v-form>
+    <!-- 전체 화면 이미지 보기 -->
+    <div v-if="isFullScreen" class="full-screen-overlay" @click="closeFullScreenImage">
+      <img :src="fullScreenImageUrl" class="full-screen-image">
+    </div>
   </v-container>
 </template>
-
-
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 
-// 상태 및 상수 정의
 const itemFormDto = ref({
   id: -1,
   itemNm: '',
@@ -109,6 +131,7 @@ const itemFormDto = ref({
   itemSellStatus: 'SELL',
   itemImgFiles: []
 });
+
 const labels = {
   itemNm: '상품명',
   price: '가격',
@@ -116,48 +139,60 @@ const labels = {
   stockNumber: '재고',
   itemSellStatus: '판매 상태'
 };
+
 const getLabel = (key) => {
   return labels[key] || key;
 };
+
 const previewImageUrls = ref([]);
 const itemSellStatusOptions = ['SELL', 'SOLD_OUT'];
-const fileRules = [
-  v => !v || (v.length === 0 || v.some(file => file.size <= 20000000)) || '파일 크기는 20MB 이하여야 합니다.'
-];
-
-// 수정인지 등록인지 판별
 const isEditMode = computed(() => itemFormDto.value.id != -1);
+const isFullScreen = ref(false);
+const fullScreenImageUrl = ref('');
 
-// 파일 업로드 처리 함수
-function handleFileUpload(event) {
-  const files = event.target.files;
-  previewImageUrls.value = [];
-  Array.from(files).forEach(file => {
-    if (file && file.type.startsWith('image/')) {
+// 이미지 파일 등록 & 수정
+function triggerFileInput(index) {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.onchange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        previewImageUrls.value.push(e.target.result);
+        previewImageUrls.value[index] = e.target.result;
+        itemFormDto.value.itemImgFiles[index] = file;
       };
       reader.readAsDataURL(file);
     }
-  });
+  };
+  input.click();
 }
 
-// 파일 입력 변경 처리 함수
-function updateFileInput(value) {
-  if (!value || value.length === 0) {
-    previewImageUrls.value = [];
-  }
+// 이미지 제거
+function removeImage(index) {
+  previewImageUrls.value[index] = null;
+  itemFormDto.value.itemImgFiles.splice(index, 1);
+}
+
+// 이미지 클릭 시 전체 화면으로 보기
+function showFullScreenImage(index) {
+  fullScreenImageUrl.value = previewImageUrls.value[index];
+  isFullScreen.value = true;
+}
+
+function closeFullScreenImage() {
+  isFullScreen.value = false;
+  fullScreenImageUrl.value = '';
 }
 
 // 폼 제출 함수
 async function submitForm() {
-
   const formData = new FormData();
   
   // itemFormDto의 기타 필드들을 formData에 추가
   for (const [key, value] of Object.entries(itemFormDto.value)) {
-    if (key != 'id' && key != 'itemImgFiles' && ( value == null || value.trim() == '' ) ) {
+    if (key != 'id' && key != 'itemImgFiles' && (value == null || value.trim() == '')) {
       alert('"' + getLabel(key) + '" 을 확인해주세요.');
       return;
     }
@@ -170,7 +205,6 @@ async function submitForm() {
       }
     }
   }
-
   // 파일이 있을 경우 formData에 추가
   if (itemFormDto.value.itemImgFiles && itemFormDto.value.itemImgFiles.length > 0) {
     itemFormDto.value.itemImgFiles.forEach((file) => {
@@ -190,6 +224,9 @@ async function submitForm() {
       console.log('등록 성공');
       console.log(response);
     }
+
+    // 등록 성공 후 메인 페이지로 이동 로직
+    
   } catch (error) {
     if (error.response) {
       // 서버에서 응답으로 오류 메시지를 보냈을 때
@@ -204,7 +241,6 @@ async function submitForm() {
   }
 }
 
-
 // 페이지 초기화 및 아이템 데이터 로드 함수
 function init() {
   // 예를 들어, 라우트 파라미터에서 ID를 가져오는 로직을 구현할 수 있음
@@ -215,6 +251,9 @@ function init() {
 
   if (isEditMode.value) {
     // 수정 모드일 때, 해당 아이템의 데이터를 로드
+    // 이미지들도 다 넣어줘야함
+
+
   }
 }
 
@@ -223,59 +262,80 @@ onMounted(init);
 
 </script>
 
-
-
-
 <style scoped>
-.image-preview-container {
-  border: 1px solid #ddd;
-  background-color: #f8f8f8; /* 배경색 추가 */
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* 그림자 효과 추가 */
-  overflow-y: auto; /* 스크롤 가능하도록 설정 */
-  max-height: 600px; /* 컨테이너 최대 높이 설정 */
-  margin-left: 3%;
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
 }
 
-.image-preview {
-  margin-top: 10px; /* 이미지 하단 마진 추가 */
-  padding: 10px; /* 이미지 주변 패딩 추가 */
-}
-
-/* 이미지 레이아웃 */
-.v-col-12 {
+.image-box {
   width: 100%;
-  padding: 0px;
-  background-color: rgb(53, 53, 53);
+  height: 100px;
+  border: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5px;
+  position: relative;
+  cursor: pointer; /* 마우스 포인터 모양 변경 */
 }
 
-img {
-  width: 100%; /* 이미지 너비를 컨테이너에 맞춤 */
-  height: auto; /* 이미지 높이 자동 조절 */
+.image-box img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.full-screen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 80vw; /* 전체 화면보다 조금 작게 */
+  height: 80vh; /* 전체 화면보다 조금 작게 */
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* 다른 요소 위로 이미지 배치 */
+  cursor: pointer;
+  margin: auto;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+}
+
+.full-screen-image {
+  max-width: 90%;
+  max-height: 90%;
 }
 
 .v-container {
-  max-width: 100%;
+  max-width: 70%;
   margin: auto;
 }
 
 .v-select, .v-text-field, .v-textarea, .v-file-input {
   background-color: #ffffff;
-  margin: 10px;
+  margin: 5px;
 }
 
 .v-btn {
-  height: 50px;
+  height: 40px;
   text-transform: none;
+  margin-top: 5px;
+  font-size: 12px;
 }
 
 .v-col-3, .v-col-9 {
   width: 100%;
   padding: 1px;
 }
+
+/* 스크롤바 설정 */
+.v-container {
+  max-width: 70%;
+  margin: auto;
+  max-height: 80vh; /* 최대 높이 설정 */
+  overflow-y: auto; /* 세로 스크롤바 추가 */
+}
 </style>
-
-
-
-
-
-

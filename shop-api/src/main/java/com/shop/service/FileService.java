@@ -17,6 +17,8 @@ public class FileService {
         // 파일 객체를 구별하기 위해 UUID 사용
         String savedFileName = uuid.toString() + extension;
         String fileUploadFullUrl = uploadPath + "/" + savedFileName;
+        log.info("File Save : " + savedFileName);
+        log.info("File Path : " + uploadPath);
         FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
         fos.write(fileData);
         fos.close();

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * <br> TODO : 관리자 페이지에서 주의사항
@@ -64,7 +65,7 @@ public class ItemController {
     @PostMapping(value = "/admin/item/new", consumes = {"multipart/form-data"})
     public ResponseEntity itemNew(@Valid ItemFormDto itemFormDto,
                                   BindingResult bindingResult,
-                                  @RequestPart(required = false) MultipartFile[] itemImgFiles){
+                                  @RequestPart(required = false) List<MultipartFile> itemImgFiles){
         logger.info(StringUtil.controllerStartLog("상품 등록 시작"));
 
         if(bindingResult.hasErrors())
@@ -98,7 +99,7 @@ public class ItemController {
     @PatchMapping(value = "/admin/item/{itemId}", consumes = {"multipart/form-data"})
     public ResponseEntity itemUpdate(@ModelAttribute @Valid ItemFormDto itemFormDto,
                                      BindingResult bindingResult,
-                                     @RequestPart(required = false) MultipartFile[] itemImgFiles){
+                                     @RequestPart(required = false) List<MultipartFile> itemImgFiles){
         logger.info(StringUtil.controllerStartLog("상품 수정 시작"));
 
         if(bindingResult.hasErrors())

@@ -31,7 +31,6 @@ class MemberTest {
 
     @Autowired
     MemberRepository memberRepository;
-
     @PersistenceContext
     EntityManager em;
 
