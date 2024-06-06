@@ -120,7 +120,11 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import axios from 'axios';
+
+// Vue Router 훅 사용
+const router = useRouter();
 
 const itemFormDto = ref({
   id: -1,
@@ -213,19 +217,18 @@ async function submitForm() {
   }
 
   try {
-    if (isEditMode.value) {
-      // 수정 로직을 구현
-      const response = await axios.patch(`/api/admin/item/${itemFormDto.value.id}`, formData);
-      console.log('수정 성공');
-      console.log(response);
-    } else {
-      // 등록 로직을 구현
-      const response = await axios.post('/api/admin/item/new', formData);
-      console.log('등록 성공');
-      console.log(response);
-    }
-
+    // 등록, 수정 로직
+    const response = isEditMode.value ?
+      await axios.patch(`/api/admin/item/${itemFormDto.value.id}`, formData) :
+      await axios.post('/api/admin/item/new', formData);
+    
+    console.log(response);
+    
     // 등록 성공 후 메인 페이지로 이동 로직
+    if(response.status == 200 || response.statusText == 'OK') {
+      console.log('성공');
+      router.push({ name: 'main' });
+    }
     
   } catch (error) {
     if (error.response) {

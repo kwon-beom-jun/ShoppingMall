@@ -44,41 +44,37 @@
   </v-container>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { login } from '@/utils/auth.js';
 
-export default {
-  
-  data() {
-    return {
-      email: '',
-      password: '',
-      loginErrorMsg: ''
-    };
-  },
+const email = ref('');
+const password = ref('');
+const loginErrorMsg = ref('');
+const router = useRouter();
 
-  methods: {
-    async handleLogin() {
-      try {
-        this.loginErrorMsg = '';
-        const response = await login(this.email, this.password);
-        console.log(response.data.token);
-        this.$emit('login-success'); // 로그인 성공 이벤트 발생
-        this.$router.push({ name: 'main' });
-      } catch (error) {
-        this.loginErrorMsg = error.message;
-        console.log(error);
-      }
-    },
-    goToRegister() {
-      this.$router.push({ name: 'memberRegister' });
-    }
+const handleLogin = async () => {
+  try {
+    loginErrorMsg.value = '';
+    const response = await login(email.value, password.value);
+    console.log(response.data.token);
+    router.push({ name: 'main' });
+    const event = new CustomEvent('login-success');
+    window.dispatchEvent(event); // 이벤트를 window 객체에 전달
+  } catch (error) {
+    loginErrorMsg.value = error.message;
+    console.log(error);
   }
+};
+
+const goToRegister = () => {
+  router.push({ name: 'memberRegister' });
 };
 </script>
 
 <style scoped>
-.v-container{
+.v-container {
   margin-top: 100px;
 }
 </style>

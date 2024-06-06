@@ -4,15 +4,9 @@
 
 </template>
   
-<script>
-export default {
-  data() {
-    return {
-      temp: ''
-    };
-  },
-  methods: {
-  }
-};
+<script setup>
+// import { ref } from 'vue';
+
+// const temp = ref('');
 </script>
   
