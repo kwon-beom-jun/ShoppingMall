@@ -17,34 +17,19 @@
   </v-footer>
 </template>
 
-<script>
+<script setup>
 import { reactive } from 'vue'; // Vue 3의 Composition API에서 reactive 함수를 가져옵니다.
 
-export default {
-  name: 'FooterLayout',
-
-  setup() {
-    // links 변수를 반응형으로 만듭니다.
-    const links = reactive([
-      'HOME',
-      'ABOUT US',
-      'TEMA',
-      'GITHUB',
-      'SERVICES',
-      'BLOG',
-      'CONTACT US'
-    ]);
-
-    return {
-      links // links 변수를 반환합니다.
-    };
-  },
-
-  data() {
-    return {
-    };
-  },
-};
+// links 변수를 반응형으로 만듭니다.
+const links = reactive([
+  'HOME',
+  'ABOUT US',
+  'TEMA',
+  'GITHUB',
+  'SERVICES',
+  'BLOG',
+  'CONTACT US'
+]);
 </script>
 
 <style>

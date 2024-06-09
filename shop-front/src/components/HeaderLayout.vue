@@ -56,66 +56,49 @@
       <v-list-item v-if="!isLoggedIn" href="/members/new">
         <v-list-item-title>회원가입</v-list-item-title>
       </v-list-item>
-      <v-list-item v-if="isLoggedIn" @click="logout">
+      <v-list-item v-if="isLoggedIn" @click="logoutHandler">
         <v-list-item-title>로그아웃</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
 
-<script>
-import { computed } from 'vue';
+<script setup>
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { logout } from '@/utils/auth.js';
 
-export default {
-  
-  setup() {
-    // 로그인 상태 확인
-    const isLoggedIn = computed(() => {
-      return !!localStorage.getItem('jwtToken');
-    });
+const drawer = ref(false);
+const searchQuery = ref('');
 
-    // 관리자 여부 확인
-    const isAdmin = computed(() => {
-      return localStorage.getItem('userRole') === 'ROLE_ADMIN';
-    });
+// 로그인 상태 확인
+const isLoggedIn = computed(() => {
+  return !!localStorage.getItem('jwtToken');
+});
 
-    // 관리자 여부 확인
-    const isUser = computed(() => {
-      return localStorage.getItem('userRole') === 'ROLE_USER';
-    });
+// 관리자 여부 확인
+const isAdmin = computed(() => {
+  return localStorage.getItem('userRole') === 'ROLE_ADMIN';
+});
 
-    return {
-      isLoggedIn,
-      isAdmin,
-      isUser
-    };
-  },
+// 관리자 여부 확인
+const isUser = computed(() => {
+  return localStorage.getItem('userRole') === 'ROLE_USER';
+});
 
-  data() {
-    return {
-      drawer: false,
-      // isLoggedIn: false, // 사용자 로그인 상태
-      // isAdmin: false, // 관리자 여부
-      // isUser: false, // 일반 사용자 여부
-      searchQuery: '' // 검색 쿼리
-    };
-  },
+const router = useRouter();
 
-  methods: {
-    setLang(lang) {
-      // 다국어 설정 로직
-      console.log(lang);
-    },
-    search() {
-      // 검색 로직
-    },
-    async logout() {
-      logout();
-      await this.$router.push({name: 'main'});
-      location.reload();
-    }
-  }
+const setLang = (lang) => {
+  console.log(lang);
+};
+
+// 검색 로직
+// const search = () => {};
+
+const logoutHandler = async () => {
+  logout();
+  await router.push({ name: 'main' });
+  location.reload();
 };
 </script>
 
@@ -125,7 +108,7 @@ export default {
   color: inherit; /* 부모 요소의 글자색을 상속받음 */
   cursor: pointer; /* 커서 모양을 포인터로 변경하여 클릭 가능한 것처럼 보이도록 함 */
 }
-.v-text-field{
+.v-text-field {
   max-width: 20%;
 }
 </style>
