@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -90,10 +91,18 @@ public class ItemController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // ResponseEntity 타입 명시 안하면 Object 타입
     @GetMapping(value = "/admin/item/{itemId}")
-    public ResponseEntity itemDtl(@PathVariable("itemId") Long itemId){
+    public ResponseEntity<?> itemDtl(@PathVariable("itemId") Long itemId){
         logger.info(StringUtil.controllerStartLog("단일 상품 세부정보 검색"));
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
+            return ResponseEntity.ok(itemFormDto);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("존재하지 않는 상품 입니다."); // 404
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다."); // 500
+        }
     }
 
     @PatchMapping(value = "/admin/item/{itemId}", consumes = {"multipart/form-data"})
