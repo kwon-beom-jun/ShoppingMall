@@ -219,8 +219,8 @@ async function submitForm() {
   try {
     // 등록, 수정 로직
     const response = isEditMode.value ?
-      await axios.patch(`/api/admin/item/${itemFormDto.value.id}`, formData) :
-      await axios.post('/api/admin/item/new', formData);
+      await axios.patch(`/admin/item/${itemFormDto.value.id}`, formData) :
+      await axios.post('/admin/item/new', formData);
     
     console.log(response);
     
@@ -245,21 +245,33 @@ async function submitForm() {
 }
 
 // 페이지 초기화 및 아이템 데이터 로드 함수
-function init() {
-  // 예를 들어, 라우트 파라미터에서 ID를 가져오는 로직을 구현할 수 있음
-  // 이 ID에 따라서 itemFormDto.value.id를 설정
-  // Vue Router를 사용하는 경우 아래와 같이 사용
-  // const route = useRoute();
-  // itemFormDto.value.id = route.params.itemId;
-
-  if (isEditMode.value) {
-    // 수정 모드일 때, 해당 아이템의 데이터를 로드
-    // 이미지들도 다 넣어줘야함
-
-
+async function init() {
+  
+  const itemId = router.currentRoute.value.params.itemId;
+  
+  if (itemId != 'new') {
+    try {
+      const response = await axios.get(`/admin/item/${itemId}`);
+      if (response.status === 200) {
+        console.log(response.data);
+        // 하나 이상의 소스 객체로부터 대상 객체로 속성을 복사하는 메서드
+        Object.assign(itemFormDto.value, response.data);
+        // 이미지 데이터도 로드
+        if (response.data.itemImgDtoList && response.data.itemImgDtoList.length > 0) {
+          // previewImageUrls.value = response.data.itemImgDtoList.map(img => URL.createObjectURL(img.imgUrl));
+          // previewImageUrls.value = response.data.itemImgDtoList.map(img => "http://localhost:8080/api/admin" + `${img.imgUrl}`);
+          // previewImageUrls.value = response.data.itemImgDtoList.map(img => "/api" + `${img.imgUrl}`);
+          previewImageUrls.value = response.data.itemImgDtoList.map(img => `${img.imgUrl}`);
+          console.log('previewImageUrls ▶▶▶▶▶ ' + previewImageUrls.value[0])
+        }
+      }
+    } catch (error) {
+      alert('아이템을 조회하는중 오류가 발생했습니다.');
+      console.log('Error loading item details:', error);
+    }
   }
 }
-
+ 
 // 컴포넌트가 마운트되었을 때 init 함수를 호출
 onMounted(init);
 

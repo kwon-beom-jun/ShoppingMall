@@ -38,22 +38,22 @@
 
   <v-navigation-drawer v-model="drawer" app color="#FDFBFF">
     <v-list>
-      <v-list-item v-if="isAdmin" href="/admin/item/new">
+      <v-list-item v-if="isAdmin" href="/vue/admin/item/new">
         <v-list-item-title>상품 등록</v-list-item-title>
       </v-list-item>
-      <v-list-item v-if="isAdmin" href="/admin/items">
+      <v-list-item v-if="isAdmin" href="/vue/admin/items">
         <v-list-item-title>상품 관리</v-list-item-title>
       </v-list-item>
-      <v-list-item v-if="isUser" href="/cart">
+      <v-list-item v-if="isUser" href="/vue/cart">
         <v-list-item-title>장바구니</v-list-item-title>
       </v-list-item>
-      <v-list-item v-if="isUser" href="/orders">
+      <v-list-item v-if="isUser" href="/vue/orders">
         <v-list-item-title>구매이력</v-list-item-title>
       </v-list-item>
-      <v-list-item v-if="!isLoggedIn" href="/members/login">
+      <v-list-item v-if="!isLoggedIn" href="/vue/members/login">
         <v-list-item-title>로그인</v-list-item-title>
       </v-list-item>
-      <v-list-item v-if="!isLoggedIn" href="/members/new">
+      <v-list-item v-if="!isLoggedIn" href="/vue/members/new">
         <v-list-item-title>회원가입</v-list-item-title>
       </v-list-item>
       <v-list-item v-if="isLoggedIn" @click="logoutHandler">

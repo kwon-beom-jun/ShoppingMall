@@ -57,7 +57,7 @@ const router = useRouter();
 
 const submitForm = async () => {
   try {
-    const response = await axios.post('/api/members/new', {
+    const response = await axios.post('/members/new', {
       name: form.name,
       email: form.email,
       password: form.password,
