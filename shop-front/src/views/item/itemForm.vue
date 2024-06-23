@@ -258,11 +258,8 @@ async function init() {
         Object.assign(itemFormDto.value, response.data);
         // 이미지 데이터도 로드
         if (response.data.itemImgDtoList && response.data.itemImgDtoList.length > 0) {
-          // previewImageUrls.value = response.data.itemImgDtoList.map(img => URL.createObjectURL(img.imgUrl));
-          // previewImageUrls.value = response.data.itemImgDtoList.map(img => "http://localhost:8080/api/admin" + `${img.imgUrl}`);
-          // previewImageUrls.value = response.data.itemImgDtoList.map(img => "/api" + `${img.imgUrl}`);
           previewImageUrls.value = response.data.itemImgDtoList.map(img => `${img.imgUrl}`);
-          console.log('previewImageUrls ▶▶▶▶▶ ' + previewImageUrls.value[0])
+          console.log('previewImageUrls ▶▶▶▶▶ ' + previewImageUrls.value[0]);
         }
       }
     } catch (error) {

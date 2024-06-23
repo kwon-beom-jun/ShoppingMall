@@ -101,6 +101,11 @@
 			<version>4.3.1</version>
 		</dependency>
 
+		<!-- WebSocket 설정 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
 
 		<!-- Spring Boot Devtools -->
 		<!-- Automatic Restart : classpath 내부 파일이 변경될 때마다 애플리케이션 자동 재시작 -->
