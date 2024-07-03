@@ -51,17 +51,32 @@ public class ItemService {
         // 등록순으로 가져오기 위해서 상품 이미지 아이디 오름차순으로 조회
         List<ItemImg> itemImgList = itemImgRepository.findByItemIdOrderByIdAsc(itemId);
         List<ItemImgDto> itemImgDtoList = new ArrayList<>();
+        List<Long> itemImgIds = new ArrayList<>();
         for (ItemImg itemImg : itemImgList) {
             // ModelMapper Library 사용
             ItemImgDto itemImgDto = ItemImgDto.of(itemImg);
             itemImgDtoList.add(itemImgDto);
+            itemImgIds.add(itemImgDto.getId());
         }
         // 상품 아이디를 통해 상품 엔티티 조회, 존재하지 않으면 EntityNotFoundException 발생
         Item item = itemRepository.findById(itemId).orElseThrow(EntityNotFoundException::new);
         ItemFormDto itemFormDto = ItemFormDto.of(item);
         itemFormDto.setItemImgDtoList(itemImgDtoList);
+        itemFormDto.setItemImgIds(itemImgIds);
         return itemFormDto;
     }
 
+    public Long updateItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) throws Exception {
+        //상품 수정
+        Item item = itemRepository.findById(itemFormDto.getId()).orElseThrow(EntityNotFoundException::new);
+        item.updateItem(itemFormDto);
+        List<Long> itemImgIds = itemFormDto.getItemImgIds();
+
+        //이미지 등록
+        for(int i = 0; i < itemImgFileList.size(); i++){
+            itemImgService.updateItemImg(itemImgIds.get(i), itemImgFileList.get(i));
+        }
+        return item.getId();
+    }
 
 }

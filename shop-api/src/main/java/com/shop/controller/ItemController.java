@@ -66,9 +66,9 @@ public class ItemController {
     @PostMapping(value = "/admin/item/new", consumes = {"multipart/form-data"})
     public ResponseEntity itemNew(@Valid ItemFormDto itemFormDto,
                                   BindingResult bindingResult,
-                                  @RequestPart(required = false) List<MultipartFile> itemImgFiles){
+                                  @RequestPart(required = false) List<MultipartFile> itemImgFiles) {
         logger.info(StringUtil.controllerStartLog("상품 등록 시작"));
-
+        System.out.println(bindingResult.getAllErrors());
         if(bindingResult.hasErrors())
             return ResponseUtil.responseBadRequest("상품 입력값들을 확인해 주세요.");
         if (itemImgFiles == null)
@@ -93,7 +93,7 @@ public class ItemController {
 
     // ResponseEntity 타입 명시 안하면 Object 타입
     @GetMapping(value = "/admin/item/{itemId}")
-    public ResponseEntity<?> itemDtl(@PathVariable("itemId") Long itemId){
+    public ResponseEntity<?> itemDtl(@PathVariable("itemId") Long itemId) {
         logger.info(StringUtil.controllerStartLog("단일 상품 세부정보 검색"));
         try {
             ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
@@ -108,17 +108,26 @@ public class ItemController {
     @PatchMapping(value = "/admin/item/{itemId}", consumes = {"multipart/form-data"})
     public ResponseEntity itemUpdate(@ModelAttribute @Valid ItemFormDto itemFormDto,
                                      BindingResult bindingResult,
-                                     @RequestPart(required = false) List<MultipartFile> itemImgFiles){
+                                     @RequestPart(required = false) List<MultipartFile> itemImgFiles) {
         logger.info(StringUtil.controllerStartLog("상품 수정 시작"));
+
+        System.out.println(bindingResult.getAllErrors());
+        itemFormDto.getItemImgIds().stream().forEach(img -> System.out.println(img));
 
         if(bindingResult.hasErrors())
             return ResponseUtil.responseBadRequest("상품 입력값을 확인해 주세요.");
         if (itemImgFiles == null)
             return ResponseUtil.responseBadRequest("첫번째 상품 이미지는 필수 입력 값 입니다.");
 
-        // 상품 수정 로직
-
+        try {
+            // 상품 수정 로직
+            itemService.updateItem(itemFormDto, itemImgFiles);
+        } catch (Exception e) {
+            return ResponseUtil.responseInternalServerError("상품 등록 중 에러가 발생하였습니다.", e);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
 
 }
