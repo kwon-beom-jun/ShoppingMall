@@ -19,7 +19,7 @@ import org.modelmapper.ModelMapper;
  */
 // 상품 저장 이후 상품 이미지에 대한 데이터를 전달할 DTO
 @Getter @Setter
-public class ItemImgDto {
+public class  ItemImgDto {
 
     private Long id;
 

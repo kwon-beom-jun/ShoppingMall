@@ -44,7 +44,7 @@ public class ItemService {
         return item.getId();
     }
 
-    // @Transactional : 읽기 전용일 경우 JPA가 더티체킹(변경 감지)을 수행하지 않아서 성능이 향상 
+    // @Transactional : 읽기 전용일 경우 JPA가 더티체킹(변경 감지)을 수행하지 않아서 성능이 향상
     @Transactional(readOnly = true)
     public ItemFormDto getItemDtl(Long itemId){
         // 상품 이미지 조회
@@ -72,9 +72,26 @@ public class ItemService {
         item.updateItem(itemFormDto);
         List<Long> itemImgIds = itemFormDto.getItemImgIds();
 
+        /**
+         * FIXME : 수정하기
+         *      - 이미지를 추가로 등록하면 이상하게 등록됨
+         *      itemFormDto id 값들로 데이터베이스에서 뽑아낸 원본 이름과
+         *      itemImgFileList의 원본 이름을 이중 FOR문으로 매핑하는 로직으로 수정
+         *          해당 id값의 원본 이름과 똑같은게 있다면 기존 이미지 제거 후 새로운 이미지 등록
+         *          해당 id값의 원본 이름과 똑같은게 없다면 새로운 이미지 등록 ( 로직 추가해야함 )
+         *              → 기존 이미지 정보는 delete
+         *              → 새로운 이미지 정보는 insert
+         *              → insert 부분을 따로 빼서 로직을 구현할지 고민해보기
+         *              → Vue에서 제거된 ID가 있는지 체크해서 제거된 ID 이미지 정보 delete 해줘야함
+         *                만약 이미지가 전부 제거되었고 '수정 및 등록된 이미지'(itemImgFileList == 공백 or NULL)가
+         *                없을경우 사용자에게 이미지를 한장 이상의 이미지를 등록해 달라고 문구 표출
+         *                ex) 이미지 두개중 한개 제거 수정 및 등록 이미지 없을때
+         */
         //이미지 등록
-        for(int i = 0; i < itemImgFileList.size(); i++){
-            itemImgService.updateItemImg(itemImgIds.get(i), itemImgFileList.get(i));
+        if (itemImgFileList != null) {
+            for (int i = 0; i < itemImgFileList.size(); i++) {
+                itemImgService.updateItemImg(itemImgIds.get(i), itemImgFileList.get(i));
+            }
         }
         return item.getId();
     }

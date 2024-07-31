@@ -133,6 +133,7 @@ const itemFormDto = ref({
   itemDetail: '',
   stockNumber: null,
   itemSellStatus: 'SELL',
+  itemImgDtoList: [],
   itemImgFiles: []
 });
 
@@ -190,30 +191,54 @@ function closeFullScreenImage() {
   fullScreenImageUrl.value = '';
 }
 
+/**
+ * itemFormDto의 itemImgDtoList는 수정시 데이터를 백엔드에서 프론트로 보내주기 위해 사용
+ *    → itemImgDtoList는 받은 그대로 다시 백엔드로 전달, 'ID' 값들로 데이베이스에서 이미지 정보들을 조회하고
+ *      조회한 이미지의 원본이름들과 itemImgFiles 이름들을 비교해서 일치하지 않으면 업데이트
+ */
 // 폼 제출 함수
 async function submitForm() {
   const formData = new FormData();
   
-  // itemFormDto의 기타 필드들을 formData에 추가
+  // 수정하거나 등록한 파일이 있으면 formData에 추가
+  if (itemFormDto.value.itemImgFiles && itemFormDto.value.itemImgFiles.length > 0) {
+    itemFormDto.value.itemImgFiles.forEach((file) => {
+      formData.append('itemImgFiles', file);
+    });
+  }
+
+
+  // 수정 로직 진행 시 파일이 있을 경우 formData에 추가
+  // if (itemFormDto.value.itemImgDtoList && itemFormDto.value.itemImgDtoList.length > 0) {
+  //   for (const img of itemFormDto.value.itemImgDtoList) {
+  //     try {
+  //       const file = await fetch(img.imgUrl)
+  //          .then(res => res.arrayBuffer())
+  //          .then(buf => new File([buf], img.imgName, { type: 'image/jpeg' }));
+  //       formData.append('itemImgFiles', file);
+  //     } catch (error) {
+  //       console.error('Error converting image URL to file:', error);
+  //     }
+  //   }
+  // }
+
+  // itemFormDto의(itemImgDtoList 제외) 기타 필드들을 formData에 추가
   for (const [key, value] of Object.entries(itemFormDto.value)) {
-    if (key != 'id' && key != 'itemImgFiles' && (value == null || value.trim() == '')) {
-      alert('"' + getLabel(key) + '" 을 확인해주세요.');
-      return;
-    }
-    if (key !== 'itemImgFiles') { // 파일이 아닌 필드들을 처리
+    if (key != 'itemImgFiles' && key != 'itemImgDtoList') {
+      if (key != 'id' && key != 'itemImgFiles' && (value == null || value.toString().trim() == '')) {
+        alert('"' + getLabel(key) + '" 을 확인해주세요.');
+        return;
+      }
+      console.log("key >> " + key + " | value >> " + value);
       formData.append(key, value);
-    } else {
+    }
+    // 등록일때 이미지 상품 확인
+    if (key == 'itemImgFiles' && !isEditMode.value) {
       if (value.length == 0) {
         alert('첫번째 상품 이미지는 필수 입력 값 입니다.');
         return;
       }
     }
-  }
-  // 파일이 있을 경우 formData에 추가
-  if (itemFormDto.value.itemImgFiles && itemFormDto.value.itemImgFiles.length > 0) {
-    itemFormDto.value.itemImgFiles.forEach((file) => {
-      formData.append('itemImgFiles', file);
-    });
   }
 
   try {
@@ -221,8 +246,6 @@ async function submitForm() {
     const response = isEditMode.value ?
       await axios.patch(`/admin/item/${itemFormDto.value.id}`, formData) :
       await axios.post('/admin/item/new', formData);
-    
-    console.log(response);
     
     // 등록 성공 후 메인 페이지로 이동 로직
     if(response.status == 200 || response.statusText == 'OK') {
@@ -251,17 +274,19 @@ async function init() {
   
   if (itemId != 'new') {
     try {
+      console.log('수정 페이지 진입')
       const response = await axios.get(`/admin/item/${itemId}`);
       if (response.status === 200) {
-        console.log(response.data);
         // 하나 이상의 소스 객체로부터 대상 객체로 속성을 복사하는 메서드
         Object.assign(itemFormDto.value, response.data);
         // 이미지 데이터도 로드
         if (response.data.itemImgDtoList && response.data.itemImgDtoList.length > 0) {
           previewImageUrls.value = response.data.itemImgDtoList.map(img => `${img.imgUrl}`);
-          console.log('previewImageUrls ▶▶▶▶▶ ' + previewImageUrls.value[0]);
         }
       }
+      console.table(itemFormDto.value);
+      console.log('수정 페이지 데이터 작업 완료')
+
     } catch (error) {
       alert('아이템을 조회하는중 오류가 발생했습니다.');
       console.log('Error loading item details:', error);

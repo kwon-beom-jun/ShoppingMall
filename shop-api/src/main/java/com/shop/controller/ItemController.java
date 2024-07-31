@@ -86,6 +86,7 @@ public class ItemController {
             // 상품 등록
             Long id = itemService.saveItem(itemFormDto, itemImgFiles);
         } catch (Exception e) {
+            e.getStackTrace();
             return ResponseUtil.responseInternalServerError("상품 등록 중 에러가 발생하였습니다.", e);
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -101,33 +102,48 @@ public class ItemController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("존재하지 않는 상품 입니다."); // 404
         } catch (Exception e) {
+            e.getStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다."); // 500
         }
     }
 
+    /**
+     TODO :  itemImgIds itemImgDtoList : 백엔드에서 서버로 보내주기 위해 사용되는 이미지 리스트
+             ItemFormDto itemImgIds : 기존(원본) 이미지의 ID 값
+             itemImgFiles : 수정되거나 새로운 파일들
+             추후 기존 파일들의 id로 데이터베이스에서 조회해서
+             오리지널 이름과 새로운 파일들의 오리지널 이름과 비교해서 업데이트
+             ※ itemImgDtoList는 백엔드에서 프론트로 이미지 파일들 정보 보내줄때만 사용
+     */
     @PatchMapping(value = "/admin/item/{itemId}", consumes = {"multipart/form-data"})
     public ResponseEntity itemUpdate(@ModelAttribute @Valid ItemFormDto itemFormDto,
                                      BindingResult bindingResult,
                                      @RequestPart(required = false) List<MultipartFile> itemImgFiles) {
         logger.info(StringUtil.controllerStartLog("상품 수정 시작"));
 
-        System.out.println(bindingResult.getAllErrors());
-        itemFormDto.getItemImgIds().stream().forEach(img -> System.out.println(img));
-
-        if(bindingResult.hasErrors())
+        if (bindingResult.hasErrors()) {
+            logger.error("ItemFormDto에 상품값 등록에 실패했습니다.", bindingResult.getAllErrors());
             return ResponseUtil.responseBadRequest("상품 입력값을 확인해 주세요.");
-        if (itemImgFiles == null)
-            return ResponseUtil.responseBadRequest("첫번째 상품 이미지는 필수 입력 값 입니다.");
+        }
+
+        itemFormDto.getItemImgIds().stream().forEach(img -> logger.info("itemImgIds >>> " + img));
+
+        if (itemImgFiles == null) {
+            logger.info("수정된 상품 이미지가 없습니다.");
+        } else {
+            itemImgFiles.forEach(file -> logger.info(
+                file.getName() + "\n" +
+                file.getOriginalFilename() + "\n"
+            ));
+        }
 
         try {
             // 상품 수정 로직
             itemService.updateItem(itemFormDto, itemImgFiles);
         } catch (Exception e) {
+            e.getStackTrace();
             return ResponseUtil.responseInternalServerError("상품 등록 중 에러가 발생하였습니다.", e);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-
 }
