@@ -126,6 +126,9 @@ import axios from 'axios';
 // Vue Router 훅 사용
 const router = useRouter();
 
+// 백엔드에서 이미지 변경사항 확인용
+const itemImgCheckList = ref([]);
+
 const itemFormDto = ref({
   id: -1,
   itemNm: '',
@@ -167,6 +170,14 @@ function triggerFileInput(index) {
       reader.onload = (e) => {
         previewImageUrls.value[index] = e.target.result;
         itemFormDto.value.itemImgFiles[index] = file;
+
+        if (!itemImgCheckList.value[index]) {
+          itemImgCheckList.value[index] = [];
+        }
+
+        itemImgCheckList.value[index][0] == 'K' ?
+          itemImgCheckList.value[index][1] = 'U' :
+          itemImgCheckList.value[index]    = ['I','I'] ;
       };
       reader.readAsDataURL(file);
     }
@@ -178,6 +189,9 @@ function triggerFileInput(index) {
 function removeImage(index) {
   previewImageUrls.value[index] = null;
   itemFormDto.value.itemImgFiles.splice(index, 1);
+  itemImgCheckList.value[index][0] == 'K' ?
+    itemImgCheckList.value[index][1] = 'D' :
+    itemImgCheckList.value[index]    = null;
 }
 
 // 이미지 클릭 시 전체 화면으로 보기
@@ -193,8 +207,7 @@ function closeFullScreenImage() {
 
 /**
  * itemFormDto의 itemImgDtoList는 수정시 데이터를 백엔드에서 프론트로 보내주기 위해 사용
- *    → itemImgDtoList는 받은 그대로 다시 백엔드로 전달, 'ID' 값들로 데이베이스에서 이미지 정보들을 조회하고
- *      조회한 이미지의 원본이름들과 itemImgFiles 이름들을 비교해서 일치하지 않으면 업데이트
+ *    → itemImgDtoList는 받은 그대로 다시 백엔드로 전달
  */
 // 폼 제출 함수
 async function submitForm() {
@@ -207,6 +220,16 @@ async function submitForm() {
     });
   }
 
+  // itemImgCheckList를 JSON 문자열로 변환하여 FormData에 추가
+  if (isEditMode.value) {
+    const itemImgCheckListString = JSON.stringify(itemImgCheckList.value);
+    formData.append('itemImgCheckList', itemImgCheckListString);
+  }
+
+  // FormData 내용 확인 (디버깅용)
+  for (let pair of formData.entries()) {
+    console.log(pair[0]+ ', ' + pair[1]);
+  }
 
   // 수정 로직 진행 시 파일이 있을 경우 formData에 추가
   // if (itemFormDto.value.itemImgDtoList && itemFormDto.value.itemImgDtoList.length > 0) {
@@ -281,7 +304,11 @@ async function init() {
         Object.assign(itemFormDto.value, response.data);
         // 이미지 데이터도 로드
         if (response.data.itemImgDtoList && response.data.itemImgDtoList.length > 0) {
-          previewImageUrls.value = response.data.itemImgDtoList.map(img => `${img.imgUrl}`);
+          previewImageUrls.value = response.data.itemImgDtoList.map((img, index) => {
+            // itemImgCheckList 초기화 및 값 설정
+            itemImgCheckList.value[index] = ['K','K'];
+            return `${img.imgUrl}`;
+          });
         }
       }
       console.table(itemFormDto.value);
