@@ -126,8 +126,20 @@ import axios from 'axios';
 // Vue Router 훅 사용
 const router = useRouter();
 
-// 백엔드에서 이미지 변경사항 확인용
+// 이미지 변경사항 확인용
 const itemImgCheckList = ref([]);
+
+// 초기 데이터 저장용
+const originalItemFormDto = ref({
+  id: -1,
+  itemNm: '',
+  price: null,
+  itemDetail: '',
+  stockNumber: null,
+  itemSellStatus: 'SELL',
+  itemImgDtoList: [],
+  itemImgFiles: []
+});
 
 const itemFormDto = ref({
   id: -1,
@@ -174,7 +186,6 @@ function triggerFileInput(index) {
         if (!itemImgCheckList.value[index]) {
           itemImgCheckList.value[index] = [];
         }
-
         itemImgCheckList.value[index][0] == 'K' ?
           itemImgCheckList.value[index][1] = 'U' :
           itemImgCheckList.value[index]    = ['I','I'] ;
@@ -205,8 +216,51 @@ function closeFullScreenImage() {
   fullScreenImageUrl.value = '';
 }
 
+function isDataModified() {
+  let hasAddedImages = false;
+  let hasModifiedOrDeletedImages = false;
+  let allImagesDeleted = true;
+
+  // 이미지 필드 변경 사항 확인
+  for (let i = 0; i < itemImgCheckList.value.length; i++) {
+      if (itemImgCheckList.value[i] && itemImgCheckList.value[i][0] === 'K') {
+          if (itemImgCheckList.value[i][1] === 'U' || itemImgCheckList.value[i][1] === 'D') {
+              hasModifiedOrDeletedImages = true; // 기존 이미지가 수정되거나 삭제된 경우
+          }
+          if (itemImgCheckList.value[i][1] !== 'D') {
+              allImagesDeleted = false; // 기존 이미지가 삭제되지 않은 경우
+          }
+      } else if (itemImgCheckList.value[i] && itemImgCheckList.value[i][0] === 'I') {
+          hasAddedImages = true; // 새로운 이미지가 추가된 경우
+      }
+  }
+
+  // 모든 기존 이미지가 삭제되었고, 새로운 이미지가 추가되지 않은 경우
+  if (allImagesDeleted && !hasAddedImages) {
+      alert('한장 이상의 상품 이미지가 필요합니다.');
+      return false;
+  }
+
+  // 이미지 변경 사항이 있는 경우
+  if (hasModifiedOrDeletedImages || hasAddedImages) {
+      return true;
+  }
+
+  // 기본 필드 변경 사항 확인
+  const keysToCheck = ['itemNm', 'price', 'itemDetail', 'stockNumber', 'itemSellStatus'];
+  for (let key of keysToCheck) {
+      if (itemFormDto.value[key] !== originalItemFormDto.value[key]) {
+          return true;
+      }
+  }
+
+  alert('상품 데이터가 변경된 것이 없습니다.');
+  return false;
+}
+
+
 /**
- * itemFormDto의 itemImgDtoList는 수정시 데이터를 백엔드에서 프론트로 보내주기 위해 사용
+ * itemFormDto의 itemImgDtoList는 수정 진행시 데이터를 백엔드에서 프론트로 보내주기 위해 사용
  *    → itemImgDtoList는 받은 그대로 다시 백엔드로 전달
  */
 // 폼 제출 함수
@@ -220,10 +274,14 @@ async function submitForm() {
     });
   }
 
+  if (!isDataModified()) {
+    return;
+  }
+
   // itemImgCheckList를 JSON 문자열로 변환하여 FormData에 추가
   if (isEditMode.value) {
     const itemImgCheckListString = JSON.stringify(itemImgCheckList.value);
-    formData.append('itemImgCheckList', itemImgCheckListString);
+    formData.append('jsonItemImgCheckList', itemImgCheckListString);
   }
 
   // FormData 내용 확인 (디버깅용)
@@ -231,24 +289,10 @@ async function submitForm() {
     console.log(pair[0]+ ', ' + pair[1]);
   }
 
-  // 수정 로직 진행 시 파일이 있을 경우 formData에 추가
-  // if (itemFormDto.value.itemImgDtoList && itemFormDto.value.itemImgDtoList.length > 0) {
-  //   for (const img of itemFormDto.value.itemImgDtoList) {
-  //     try {
-  //       const file = await fetch(img.imgUrl)
-  //          .then(res => res.arrayBuffer())
-  //          .then(buf => new File([buf], img.imgName, { type: 'image/jpeg' }));
-  //       formData.append('itemImgFiles', file);
-  //     } catch (error) {
-  //       console.error('Error converting image URL to file:', error);
-  //     }
-  //   }
-  // }
-
   // itemFormDto의(itemImgDtoList 제외) 기타 필드들을 formData에 추가
   for (const [key, value] of Object.entries(itemFormDto.value)) {
-    if (key != 'itemImgFiles' && key != 'itemImgDtoList') {
-      if (key != 'id' && key != 'itemImgFiles' && (value == null || value.toString().trim() == '')) {
+    if (key !== 'itemImgFiles' && key !== 'itemImgDtoList') {
+      if (key !== 'id' && key !== 'itemImgFiles' && (value == null || value.toString().trim() === '')) {
         alert('"' + getLabel(key) + '" 을 확인해주세요.');
         return;
       }
@@ -256,7 +300,7 @@ async function submitForm() {
       formData.append(key, value);
     }
     // 등록일때 이미지 상품 확인
-    if (key == 'itemImgFiles' && !isEditMode.value) {
+    if (key === 'itemImgFiles' && !isEditMode.value) {
       if (value.length == 0) {
         alert('첫번째 상품 이미지는 필수 입력 값 입니다.');
         return;
@@ -279,13 +323,13 @@ async function submitForm() {
   } catch (error) {
     if (error.response) {
       // 서버에서 응답으로 오류 메시지를 보냈을 때
-      console.log("서버 에러 메시지:", error.response.data);
+      alert("서버 에러 메시지:" + error.response.data);
     } else if (error.request) {
       // 요청은 이루어졌으나 응답을 받지 못했을 때
-      console.log("No response received");
+      alert("No response received");
     } else {
       // 요청 설정 중 문제가 발생했을 때
-      console.log("Error", error.message);
+      alert("Error" + error.message);
     }
   }
 }
@@ -302,6 +346,8 @@ async function init() {
       if (response.status === 200) {
         // 하나 이상의 소스 객체로부터 대상 객체로 속성을 복사하는 메서드
         Object.assign(itemFormDto.value, response.data);
+        // 원본 데이터 저장
+        Object.assign(originalItemFormDto.value, response.data);
         // 이미지 데이터도 로드
         if (response.data.itemImgDtoList && response.data.itemImgDtoList.length > 0) {
           previewImageUrls.value = response.data.itemImgDtoList.map((img, index) => {

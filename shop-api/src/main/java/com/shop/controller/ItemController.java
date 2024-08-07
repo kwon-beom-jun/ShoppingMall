@@ -1,6 +1,10 @@
 package com.shop.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shop.dto.ItemFormDto;
+import com.shop.exception.CustomException;
 import com.shop.service.ItemService;
 import com.shop.util.ResponseUtil;
 import com.shop.util.StringUtil;
@@ -9,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <br> TODO : 관리자 페이지에서 주의사항
@@ -86,7 +93,7 @@ public class ItemController {
             // 상품 등록
             Long id = itemService.saveItem(itemFormDto, itemImgFiles);
         } catch (Exception e) {
-            e.getStackTrace();
+            e.printStackTrace();
             return ResponseUtil.responseInternalServerError("상품 등록 중 에러가 발생하였습니다.", e);
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -102,46 +109,38 @@ public class ItemController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("존재하지 않는 상품 입니다."); // 404
         } catch (Exception e) {
-            e.getStackTrace();
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다."); // 500
         }
     }
 
-    /**
-     TODO :  itemImgIds itemImgDtoList : 백엔드에서 서버로 보내주기 위해 사용되는 이미지 리스트
-             ItemFormDto itemImgIds : 기존(원본) 이미지의 ID 값
-             itemImgFiles : 수정되거나 새로운 파일들
-             추후 기존 파일들의 id로 데이터베이스에서 조회해서
-             오리지널 이름과 새로운 파일들의 오리지널 이름과 비교해서 업데이트
-             ※ itemImgDtoList는 백엔드에서 프론트로 이미지 파일들 정보 보내줄때만 사용
-     */
+    // ItemFormDto itemImgIds : 기존(원본) 이미지의 ID 값
+    // itemImgFiles : 수정되거나 새로운 파일들
     @PatchMapping(value = "/admin/item/{itemId}", consumes = {"multipart/form-data"})
     public ResponseEntity itemUpdate(@ModelAttribute @Valid ItemFormDto itemFormDto,
                                      BindingResult bindingResult,
-                                     @RequestPart(required = false) List<MultipartFile> itemImgFiles) {
+                                     @RequestPart(required = false) List<MultipartFile> itemImgFiles,
+                                     @RequestParam(required = false) String jsonItemImgCheckList) {
         logger.info(StringUtil.controllerStartLog("상품 수정 시작"));
 
-        if (bindingResult.hasErrors()) {
-            logger.error("ItemFormDto에 상품값 등록에 실패했습니다.", bindingResult.getAllErrors());
-            return ResponseUtil.responseBadRequest("상품 입력값을 확인해 주세요.");
-        }
+        itemFormDto.getItemImgIds().stream().forEach(id -> logger.info("itemImgIds >>> " + id));
 
-        itemFormDto.getItemImgIds().stream().forEach(img -> logger.info("itemImgIds >>> " + img));
-
-        if (itemImgFiles == null) {
-            logger.info("수정된 상품 이미지가 없습니다.");
-        } else {
-            itemImgFiles.forEach(file -> logger.info(
-                file.getName() + "\n" +
-                file.getOriginalFilename() + "\n"
-            ));
-        }
+        if (itemImgFiles != null)
+            itemImgFiles.forEach(file -> logger.info("UDATE FILE >>> " + file.getOriginalFilename()));
 
         try {
             // 상품 수정 로직
-            itemService.updateItem(itemFormDto, itemImgFiles);
+            itemService.updateItem(itemFormDto, itemImgFiles, jsonItemImgCheckList);
+        } catch (JsonProcessingException e) {
+            logger.error("Failed to parse itemImgCheckList", e);
+            return ResponseUtil.responseBadRequest("Invalid itemImgCheckList format");
+        } catch (CustomException e) {
+            if (e.getErrorType() == CustomException.ErrorType.ALL_IMAGES_DELETED) {
+                e.printStackTrace();
+                return ResponseUtil.responseBadRequest(e.getMessage());
+            }
         } catch (Exception e) {
-            e.getStackTrace();
+            e.printStackTrace();
             return ResponseUtil.responseInternalServerError("상품 등록 중 에러가 발생하였습니다.", e);
         }
         return new ResponseEntity<>(HttpStatus.OK);

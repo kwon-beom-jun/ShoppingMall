@@ -57,9 +57,9 @@ public class ItemImgService {
     }
 
 
-    public void updateItemImg(Long itemImgId, MultipartFile itemImgFile) throws Exception {
+    public void updateItemImg(Long itemImgId, MultipartFile itemImgFile, String repimgYn) throws Exception {
 
-        if(!itemImgFile.isEmpty()){
+        if(itemImgFile != null && !itemImgFile.isEmpty()){
 
             // 상품 이미지 아이디를 이용해서 기존 저장했던 상품 이미지 엔티티 조회
             ItemImg savedItemImg = itemImgRepository.findById(itemImgId)
@@ -81,8 +81,18 @@ public class ItemImgService {
             // 기능이 동작하여 트랜잭션이 끝날 때 update 쿼리가 실행됨(중요한 것은 엔티티가 영속 상태여야 함)
             // 불필요한 save 호출을 줄여 데이터베이스와의 상호 작용을 최소화할 수 있음
             // (save 메서드를 호출할 때마다 데이터베이스에 INSERT 또는 UPDATE 쿼리를 실행)
-            savedItemImg.updateItemImg(oriImgName, imgName, imgUrl);
+            savedItemImg.updateItemImg(oriImgName, imgName, imgUrl, repimgYn);
+        } else {
+            ItemImg savedItemImg = itemImgRepository.findById(itemImgId)
+                    .orElseThrow(EntityNotFoundException::new);
+            savedItemImg.setRepimgYn(repimgYn);
         }
+    }
+
+
+    // itemImgId로 해당 이미지 삭제
+    public void deleteItemImg(Long itemImgId) throws Exception {
+        itemImgRepository.deleteById(itemImgId);
     }
 
 }

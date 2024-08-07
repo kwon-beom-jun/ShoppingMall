@@ -1,24 +1,35 @@
 package com.shop.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shop.controller.ItemController;
 import com.shop.dto.ItemFormDto;
 import com.shop.dto.ItemImgDto;
 import com.shop.entity.Item;
 import com.shop.entity.ItemImg;
+import com.shop.exception.CustomException;
 import com.shop.repository.ItemImgRepository;
 import com.shop.repository.ItemRepository;
+import com.shop.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class ItemService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ItemController.class);
 
     private final ItemRepository itemRepository;
     private final ItemImgService itemImgService;
@@ -44,6 +55,7 @@ public class ItemService {
         return item.getId();
     }
 
+
     // @Transactional : 읽기 전용일 경우 JPA가 더티체킹(변경 감지)을 수행하지 않아서 성능이 향상
     @Transactional(readOnly = true)
     public ItemFormDto getItemDtl(Long itemId){
@@ -66,34 +78,105 @@ public class ItemService {
         return itemFormDto;
     }
 
-    public Long updateItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) throws Exception {
+
+    public Long updateItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList, String jsonItemImgCheckList) throws Exception {
         //상품 수정
         Item item = itemRepository.findById(itemFormDto.getId()).orElseThrow(EntityNotFoundException::new);
         item.updateItem(itemFormDto);
         List<Long> itemImgIds = itemFormDto.getItemImgIds();
 
+        List<String[]> itemImgCheckList = new ArrayList<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        itemImgCheckList = objectMapper.readValue(jsonItemImgCheckList, new TypeReference<List<String[]>>() {});
+
+        if (!isImageModified(itemImgCheckList)) {
+            logger.info("수정된 이미지 파일이 없습니다.");
+            return item.getId();
+        }
+
+        // 이미지 정렬
+        itemImgCheckList.sort(Comparator.comparing((String[] array)
+                -> array != null && "K".equals(array[0]) ? 0 : 1));
+
         /**
-         * FIXME : 수정하기
-         *      - 이미지를 추가로 등록하면 이상하게 등록됨
-         *      itemFormDto id 값들로 데이터베이스에서 뽑아낸 원본 이름과
-         *      itemImgFileList의 원본 이름을 이중 FOR문으로 매핑하는 로직으로 수정
-         *          해당 id값의 원본 이름과 똑같은게 있다면 기존 이미지 제거 후 새로운 이미지 등록
-         *          해당 id값의 원본 이름과 똑같은게 없다면 새로운 이미지 등록 ( 로직 추가해야함 )
-         *              → 기존 이미지 정보는 delete
-         *              → 새로운 이미지 정보는 insert
-         *              → insert 부분을 따로 빼서 로직을 구현할지 고민해보기
-         *              → Vue에서 제거된 ID가 있는지 체크해서 제거된 ID 이미지 정보 delete 해줘야함
-         *                만약 이미지가 전부 제거되었고 '수정 및 등록된 이미지'(itemImgFileList == 공백 or NULL)가
-         *                없을경우 사용자에게 이미지를 한장 이상의 이미지를 등록해 달라고 문구 표출
-         *                ex) 이미지 두개중 한개 제거 수정 및 등록 이미지 없을때
+         *  itemImgCheckList 데이터
+         *      기존 ['K','K'], 기존 변경 ['K','U'], 기존 삭제 ['K','D']
+         *      추가 ['I','I']
+         *      공백 [null,null]
          */
-        //이미지 등록
-        if (itemImgFileList != null) {
-            for (int i = 0; i < itemImgFileList.size(); i++) {
-                itemImgService.updateItemImg(itemImgIds.get(i), itemImgFileList.get(i));
+        boolean hasRepimgYn = true; // 대표 이미지 상태
+        for (int i = 0, j = 0, k = 0; k < itemImgCheckList.size(); k++) {
+            String[] row = itemImgCheckList.get(k);
+            if (row != null) {
+                if (row[0].equals("K")) {
+                    if (row[1].equals("U")) {
+                        if (!hasRepimgYn || i == 0) { // 대표 이미지가 없거나 첫 번째 이미지인 경우
+                            hasRepimgYn = true;
+                            itemImgService.updateItemImg(itemImgIds.get(i), itemImgFileList.get(j++), "Y");
+                        } else {
+                            itemImgService.updateItemImg(itemImgIds.get(i), itemImgFileList.get(j++), "N");
+                        }
+                    } else if (row[1].equals("D")) {
+                        if (hasRepimgYn && i == 0) { // 대표 이미지가 삭제되는 경우
+                            hasRepimgYn = false;
+                        }
+                        itemImgService.deleteItemImg(itemImgIds.get(i));
+                    } else if (row[1].equals("K")) {
+                        if (!hasRepimgYn || i == 0) { // 대표 이미지가 없거나 첫 번째 이미지인 경우
+                            hasRepimgYn = true;
+                            itemImgService.updateItemImg(itemImgIds.get(i), null, "Y");
+                        }
+                    }
+                    i++;
+                } else if (row[0].equals("I")) {
+                    ItemImg itemImg = new ItemImg();
+                    itemImg.setItem(item);
+                    if (!hasRepimgYn) {
+                        hasRepimgYn = true;
+                        itemImg.setRepimgYn("Y");
+                    } else {
+                        itemImg.setRepimgYn("N");
+                    }
+                    itemImgService.saveItemImg(itemImg, itemImgFileList.get(j++));
+                }
             }
         }
         return item.getId();
     }
 
+    // 이미지 변경사항 확인
+    public boolean isImageModified(List<String[]> itemImgCheckList) throws Exception {
+        boolean hasAddedImages = false;
+        boolean hasModifiedOrDeletedImages = false;
+        boolean allImagesDeleted = true;
+
+        for (int i = 0; i < itemImgCheckList.size(); i++) {
+            String[] row = itemImgCheckList.get(i);
+            if (row != null) {
+                if (row[0].equals("K")) {
+                    if (row[1].equals("U") || row[1].equals("D")) {
+                        hasModifiedOrDeletedImages = true; // 기존 이미지가 수정되거나 삭제된 경우
+                    }
+                    if (!row[1].equals("D")) {
+                        allImagesDeleted = false; // 기존 이미지가 삭제되지 않은 경우
+                    }
+                } else if (row[0].equals("I")) {
+                    hasAddedImages = true; // 새로운 이미지가 추가된 경우
+                    return true; // 추가된 이미지가 있는 경우
+                }
+            } else {
+                logger.info("itemImgCheckList[" + i + "] = null");
+            }
+        }
+        // 모든 기존 이미지가 삭제되었고, 새로운 이미지가 추가되지 않은 경우
+        if (allImagesDeleted && !hasAddedImages) {
+            throw new CustomException("한장 이상의 상품 이미지가 필요합니다.",
+                    CustomException.ErrorType.ALL_IMAGES_DELETED);
+        }
+        // 이미지 변경 사항이 있는 경우
+        if (hasModifiedOrDeletedImages || hasAddedImages) {
+            return true;
+        }
+        return false;
+    }
 }
