@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shop.controller.ItemController;
 import com.shop.dto.ItemFormDto;
 import com.shop.dto.ItemImgDto;
+import com.shop.dto.ItemSearchDto;
 import com.shop.entity.Item;
 import com.shop.entity.ItemImg;
 import com.shop.exception.CustomException;
@@ -15,6 +16,8 @@ import com.shop.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,7 +38,7 @@ public class ItemService {
     private final ItemImgService itemImgService;
     private final ItemImgRepository itemImgRepository;
 
-    public Long saveItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) throws Exception{
+    public Long saveItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) throws Exception {
 
         //상품 등록 폼으로부터 입력 받은 데이터를 이용하여 Item 객체를 생성
         Item item = itemFormDto.createItem();
@@ -43,7 +46,7 @@ public class ItemService {
         itemRepository.save(item);
 
         //이미지 등록
-        for(int i = 0; i < itemImgFileList.size(); i++){
+        for (int i = 0; i < itemImgFileList.size(); i++) {
             ItemImg itemImg = new ItemImg();
             itemImg.setItem(item);
             // 첫 번째 이미지일 경우 대표 상품 이미지 여부 값을 "Y"로 세팅
@@ -58,7 +61,7 @@ public class ItemService {
 
     // @Transactional : 읽기 전용일 경우 JPA가 더티체킹(변경 감지)을 수행하지 않아서 성능이 향상
     @Transactional(readOnly = true)
-    public ItemFormDto getItemDtl(Long itemId){
+    public ItemFormDto getItemDtl(Long itemId) {
         // 상품 이미지 조회
         // 등록순으로 가져오기 위해서 상품 이미지 아이디 오름차순으로 조회
         List<ItemImg> itemImgList = itemImgRepository.findByItemIdOrderByIdAsc(itemId);
@@ -87,7 +90,8 @@ public class ItemService {
 
         List<String[]> itemImgCheckList = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
-        itemImgCheckList = objectMapper.readValue(jsonItemImgCheckList, new TypeReference<List<String[]>>() {});
+        itemImgCheckList = objectMapper.readValue(jsonItemImgCheckList, new TypeReference<List<String[]>>() {
+        });
 
         if (!isImageModified(itemImgCheckList)) {
             logger.info("수정된 이미지 파일이 없습니다.");
@@ -179,4 +183,10 @@ public class ItemService {
         }
         return false;
     }
+
+    @Transactional(readOnly = true)
+    public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+        return itemRepository.getAdminItemPage(itemSearchDto, pageable);
+    }
+
 }

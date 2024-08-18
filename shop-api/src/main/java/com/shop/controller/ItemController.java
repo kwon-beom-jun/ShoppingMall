@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shop.dto.ItemFormDto;
+import com.shop.dto.ItemSearchDto;
+import com.shop.entity.Item;
 import com.shop.exception.CustomException;
 import com.shop.service.ItemService;
 import com.shop.util.ResponseUtil;
@@ -11,6 +13,9 @@ import com.shop.util.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
@@ -21,9 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <br> TODO : 관리자 페이지에서 주의사항
@@ -145,4 +148,32 @@ public class ItemController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+    // value에 상품 관리 화면 진입 시 URL에 페이지 번호가 없는 경우와 페이지 번호가 있는 경우 2가지 매핑
+    @GetMapping(value = {"/admin/items", "/admin/items/{page}"})
+    public ResponseEntity itemManage(ItemSearchDto itemSearchDto, @PathVariable("page") Optional<Integer> page){
+
+        // PageRequest.of 메소드를 통해 Pageable 객체를 생성
+        // 첫번째 파라미터 : 조회할 페이지 번호
+        // 두번째 파라미터 : 한번에 가지고 올 데이터 수
+        // URL 경로에 페이지 번호가 있으면 해당 페이지를 조회, 페이지 번호가 없으면 0페이지를 조회
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 10);
+        // 조회 조건과 페이징 정보를 파라미터로 넘겨서 Page<Item> 객체를 반환 받음
+        Page<Item> items = itemService.getAdminItemPage(itemSearchDto, pageable);
+
+        // 데이터를 담을 맵 객체 생성
+        Map<String, Object> response = new HashMap<>();
+        // 조회한 상품 데이터 및 페이징 정보를 뷰에 전달
+        response.put("items", items);
+        // 페이지 전환 시 기존 검색 조건을 유지한 채 이동할 수 있도록 뷰에 다시 전달
+        response.put("itemSearchDto", itemSearchDto);
+        // 상품 관리 메뉴 하단에 보여줄 페이지 번호의 최대 개수
+        response.put("maxPage", 5);
+
+        // 데이터를 JSON 형식으로 반환
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
 }
