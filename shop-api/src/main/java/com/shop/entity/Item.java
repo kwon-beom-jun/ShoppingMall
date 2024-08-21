@@ -7,7 +7,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "item")
@@ -16,9 +15,14 @@ import java.time.LocalDateTime;
 @ToString
 public class Item extends BaseEntity {
 
+    /**
+     * TODO : @GeneratedValue(strategy = GenerationType.AUTO) 주의점
+     *      MySQL이고 GenerationType.AUTO를 Item, ItemImg에서 사용하니 key 값이 연동되어서 증가됨
+     *      하여 GenerationType.IDENTITY를 지정해서 사용
+     */
     @Id
     @Column(name = "item_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;        // 상품 코드
 
     @Column(nullable = false, length = 50)

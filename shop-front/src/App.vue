@@ -1,12 +1,15 @@
 <template>
   <v-app>
+    <!-- <v-app-bar app></v-app-bar> -->
+    <HeaderLayout :key="componentKey" />
     <v-main>
-      <HeaderLayout :key="componentKey" />
       <v-container class="content">
         <router-view />
       </v-container>
-      <FooterLayout />
     </v-main>
+    <v-footer>
+      <FooterLayout />
+    </v-footer>
   </v-app>
 </template>
 
@@ -33,7 +36,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.content {
+/* .content {
   margin-top: 50px;
-}
+} */
 </style>

@@ -259,10 +259,6 @@ function isDataModified() {
 }
 
 
-/**
- * itemFormDto의 itemImgDtoList는 수정 진행시 데이터를 백엔드에서 프론트로 보내주기 위해 사용
- *    → itemImgDtoList는 받은 그대로 다시 백엔드로 전달
- */
 // 폼 제출 함수
 async function submitForm() {
   const formData = new FormData();
@@ -343,6 +339,7 @@ async function init() {
     try {
       console.log('수정 페이지 진입')
       const response = await axios.get(`/admin/item/${itemId}`);
+
       if (response.status === 200) {
         // 하나 이상의 소스 객체로부터 대상 객체로 속성을 복사하는 메서드
         Object.assign(itemFormDto.value, response.data);

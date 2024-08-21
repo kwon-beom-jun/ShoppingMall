@@ -11,7 +11,7 @@ import MemberRegister from '@/views/member/MemberRegister.vue';
 
 // item
 import itemForm from '@/views/item/itemForm.vue';
-// import ItemRegister from '@/views/item/ItemRegister.vue';
+import itemMng from '@/views/item/itemMng.vue';
 
 const routes = [
   {
@@ -47,6 +47,15 @@ const routes = [
     path: '/vue/admin/item/:itemId',
     name: 'itemForm',
     component: itemForm,
+    beforeEnter: async (to, from, next) => {
+      const isAdmin = await authAdminCheck();
+      !isAdmin ? next({ name: 'main' }) : next();
+    }
+  },
+  {
+    path: '/vue/admin/items',
+    name: 'itemMng',
+    component: itemMng,
     beforeEnter: async (to, from, next) => {
       const isAdmin = await authAdminCheck();
       !isAdmin ? next({ name: 'main' }) : next();
