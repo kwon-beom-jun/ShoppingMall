@@ -3,7 +3,7 @@
     <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
     <v-toolbar-title>
-      <router-link to="/vue" class="router-link">Shop</router-link>
+      <router-link to="/vue" class="router-link">Beom-Shop</router-link>
     </v-toolbar-title>
 
     <v-spacer></v-spacer>
@@ -20,8 +20,8 @@
     </v-btn>
 
     <v-menu offset-y>
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn text v-bind="attrs" v-on="on">
+      <template #activator="{ props }">
+        <v-btn text v-bind="props">
           Language
         </v-btn>
       </template>
@@ -38,16 +38,16 @@
 
   <v-navigation-drawer v-model="drawer" app color="#FDFBFF">
     <v-list>
-      <v-list-item v-if="isAdmin" href="/vue/admin/item/new">
+      <v-list-item v-if="isAdmin && isLoggedIn" href="/vue/admin/item/new">
         <v-list-item-title>상품 등록</v-list-item-title>
       </v-list-item>
-      <v-list-item v-if="isAdmin" href="/vue/admin/items">
+      <v-list-item v-if="isAdmin && isLoggedIn" href="/vue/admin/items">
         <v-list-item-title>상품 관리</v-list-item-title>
       </v-list-item>
-      <v-list-item v-if="isUser" href="/vue/cart">
+      <v-list-item v-if="isUser && isLoggedIn" href="/vue/cart">
         <v-list-item-title>장바구니</v-list-item-title>
       </v-list-item>
-      <v-list-item v-if="isUser" href="/vue/orders">
+      <v-list-item v-if="isUser && isLoggedIn" href="/vue/orders">
         <v-list-item-title>구매이력</v-list-item-title>
       </v-list-item>
       <v-list-item v-if="!isLoggedIn" href="/vue/members/login">

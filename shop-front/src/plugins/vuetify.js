@@ -13,7 +13,7 @@ export default createVuetify({
     themes: {
       myTheme: {
         colors: {
-          primary: '#F4F0FF', // 기본 색상을 빨간색으로 변경
+          primary: '#f5f1f0', // 기본 색상을 빨간색으로 변경
           // 여기에 필요한 다른 색상들을 설정할 수 있습니다.
         }
       }

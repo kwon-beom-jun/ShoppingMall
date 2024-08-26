@@ -35,7 +35,6 @@ const links = reactive([
 <style>
 /* 추가한 스타일 */
 .v-footer {
-  position: fixed;
   bottom: 0;
   width: 100%;
 }

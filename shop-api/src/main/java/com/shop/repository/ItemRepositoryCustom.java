@@ -1,6 +1,7 @@
 package com.shop.repository;
 
 import com.shop.dto.ItemSearchDto;
+import com.shop.dto.MainItemDto;
 import com.shop.entity.Item;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,5 +14,6 @@ public interface ItemRepositoryCustom {
     //        Page 객체는 일반적으로 Repository의 조회 메서드에서 Pageable 객체를 파라미터로 받아 결과로 반환될 때 사용
     Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable);
 
+    Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable);
 
 }

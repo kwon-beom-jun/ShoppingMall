@@ -100,6 +100,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 ,"/fonts/**"
                 ,"/css/**"
                 ,"/img/**"
+                ,"/main/**"
                 // ,"/ws/**"
                 ,"/"
            );
@@ -146,8 +147,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests() // HttpServletRequest를 사용하는 요청들에 대한 접근제한을 설정하겠다는 의미
                 // 보안 필터를 통과하되 특정 경로에 대한 접근을 제한하지 않음
                 .antMatchers("/",
-                        "/vue/**", // '/members/**'에 대한 요청은 인증이 필요 없다
-                        "/members/**", // '/members/**'에 대한 요청은 인증이 필요 없다
+                        "/vue/**", // '/vue/**'에 대한 요청은 인증이 필요 없다
+                        "/main/**",
+                        "/members/**",
                         "/thymeleaf/**" // 테스트용
                         ).permitAll()
                 // MemberService의 loadUserByUsername에서 등록된 해당 유저의 roles 참조
