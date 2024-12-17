@@ -103,7 +103,7 @@ public class ItemController {
     }
 
     // ResponseEntity 타입 명시 안하면 Object 타입
-    @GetMapping(value = "/admin/item/{itemId}")
+    @GetMapping(value = "/item/{itemId}")
     public ResponseEntity<?> itemDtl(@PathVariable("itemId") Long itemId) {
         logger.info(StringUtil.controllerStartLog("단일 상품 세부정보 검색"));
         try {
@@ -151,7 +151,7 @@ public class ItemController {
 
 
     // value에 상품 관리 화면 진입 시 URL에 페이지 번호가 없는 경우와 페이지 번호가 있는 경우 2가지 매핑
-    @GetMapping(value = {"/admin/items", "/admin/items/{page}"})
+    @GetMapping(value = {"/items", "/items/{page}"})
     public ResponseEntity itemManage(ItemSearchDto itemSearchDto, @PathVariable("page") Optional<Integer> page){
 
         // PageRequest.of 메소드를 통해 Pageable 객체를 생성

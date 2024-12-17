@@ -3,7 +3,7 @@
     <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
     <v-toolbar-title>
-      <router-link to="/vue" class="router-link">Beom-Shop</router-link>
+      <router-link to="/vue" class="router-link">Beom Shop</router-link>
     </v-toolbar-title>
 
     <v-spacer></v-spacer>

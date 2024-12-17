@@ -121,7 +121,7 @@ const searchByOptions = ['itemNm', 'createdBy'];
 // 데이터 로드 함수
 async function searchItems() {
   try {
-    const response = await axios.get(`/admin/items`, {
+    const response = await axios.get(`/items`, {
       params: {
         searchDateType: itemSearchDto.value.searchDateType,
         searchSellStatus: itemSearchDto.value.searchSellStatus,
@@ -151,7 +151,7 @@ async function searchItems() {
 async function fetchItems() {
   try {
     const page = currentPage.value - 1;
-    const response = await axios.get(`/admin/items/${page}`, {
+    const response = await axios.get(`/items/${page}`, {
       params: {
         searchDateType: itemFetchDto.value.searchDateType,
         searchSellStatus: itemFetchDto.value.searchSellStatus,
@@ -171,7 +171,7 @@ async function fetchItems() {
 // 페이지 초기화 및 아이템 데이터 로드 함수
 async function init() {
   try {
-    const response = await axios.get('/admin/items');
+    const response = await axios.get('/items');
     items.value = response.data.items;
 
     itemSearchDto.value.searchDateType = 'all';

@@ -150,6 +150,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/vue/**", // '/vue/**'에 대한 요청은 인증이 필요 없다
                         "/main/**",
                         "/members/**",
+                        "/item/**",
                         "/thymeleaf/**" // 테스트용
                         ).permitAll()
                 // MemberService의 loadUserByUsername에서 등록된 해당 유저의 roles 참조

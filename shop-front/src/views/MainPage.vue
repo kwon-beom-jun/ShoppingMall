@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <!-- 캐러셀 -->
-    <v-carousel hide-delimiter-background height="350px" class="margin" cycle interval="3000">
+    <v-carousel hide-delimiter-background height="350px" class="banner-contain" cycle interval="3000">
       <v-carousel-item v-for="(slide, i) in slides" :key="i">
         <v-img
           :src="slide.src"
@@ -21,7 +21,7 @@
 
     <!-- 상품 리스트 카드 -->
     <v-row>
-      <v-col cols="12" md="4" v-for="item in items" :key="item.id" class="margin">
+      <v-col cols="12" md="4" v-for="item in items" :key="item.id" class="item-contain">
         <v-card>
           <v-img
             :src="item.imgUrl"
@@ -94,7 +94,10 @@ onMounted(init);
 </script>
 
 <style scoped>
-.margin {
+.banner-contain {
+  margin-bottom: 50px;
+}
+.item-contain {
   margin-bottom: 30px;
 }
 .banner {

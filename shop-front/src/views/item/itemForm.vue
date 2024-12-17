@@ -338,7 +338,7 @@ async function init() {
   if (itemId != 'new') {
     try {
       console.log('수정 페이지 진입')
-      const response = await axios.get(`/admin/item/${itemId}`);
+      const response = await axios.get(`/item/${itemId}`);
 
       if (response.status === 200) {
         // 하나 이상의 소스 객체로부터 대상 객체로 속성을 복사하는 메서드

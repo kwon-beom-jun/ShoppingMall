@@ -5,12 +5,12 @@
         v-for="link in links"
         :key="link"
         variant="text"
-        class="mx-2"
+        class="mx-2 footer-link"
         rounded="xl"
       >
         {{ link }}
       </v-btn>
-      <v-col class="text-center mt-4" cols="12">
+      <v-col class="text-center mt-4 footer-text" cols="12">
         {{ new Date().getFullYear() }} Shopping Mall Example WebSite
       </v-col>
     </v-row>
@@ -37,5 +37,11 @@ const links = reactive([
 .v-footer {
   bottom: 0;
   width: 100%;
+}
+.footer-link {
+  font-size: 13px;
+}
+.footer-text {
+  font-size: 11px;
 }
 </style>

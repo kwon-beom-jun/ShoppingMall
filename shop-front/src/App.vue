@@ -2,12 +2,12 @@
   <v-app>
     <!-- <v-app-bar app></v-app-bar> -->
     <HeaderLayout :key="componentKey" />
-    <v-main>
+    <v-main class="main-content">
       <v-container class="content">
         <router-view />
       </v-container>
     </v-main>
-    <v-footer>
+    <v-footer app>
       <FooterLayout />
     </v-footer>
   </v-app>
@@ -36,7 +36,13 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* .content {
-  margin-top: 50px;
-} */
+.main-content {
+  min-height: calc(100vh - 64px); /* 전체 화면에서 헤더와 푸터를 제외한 영역 */
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex-grow: 1; /* 컨텐츠가 부족할 때도 공간을 채우도록 설정 */
+}
 </style>

@@ -4,6 +4,7 @@ import router from './router';
 import axios from 'axios';
 import vuetify from './plugins/vuetify'
 import { loadFonts } from './plugins/webfontloader'
+import './assets/styles/font.css'; // 공통 Font CSS 임포트
 
 loadFonts()
 
@@ -25,6 +26,6 @@ axios.interceptors.request.use(config => {
 
 app.config.globalProperties.$axios = axios; // 전역으로 axios 설정
 app.use(router);
-app.use(vuetify)
+app.use(vuetify);
 
 app.mount('#app');

@@ -27,7 +27,7 @@
                 <v-btn color="primary" @click="goToRegister" block>회원가입</v-btn>
               </v-col>
             </v-row>
-            <v-row justify="center" class="mt-4">
+            <!-- <v-row justify="center" class="mt-4">
               <v-col cols="12">
                 <v-btn color="yellow" dark block>카카오 로그인</v-btn>
               </v-col>
@@ -36,7 +36,7 @@
               <v-col cols="12">
                 <v-btn color="red" dark block>구글 로그인</v-btn>
               </v-col>
-            </v-row>
+            </v-row> -->
           </v-form>
         </v-card>
       </v-col>
