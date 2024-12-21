@@ -1,0 +1,90 @@
+  @font-face {
+    font-family: 'NanumSquareNeo';
+    src: url('@/assets/fonts/NanumSquareNeo-aLt.ttf') format('truetype');
+    font-weight: 300; /* Light */
+  }
+  
+  @font-face {
+    font-family: 'NanumSquareNeo';
+    src: url('@/assets/fonts/NanumSquareNeo-bRg.ttf') format('truetype');
+    font-weight: 400; /* Regular */
+  }
+  
+  @font-face {
+    font-family: 'NanumSquareNeo';
+    src: url('@/assets/fonts/NanumSquareNeo-cBd.ttf') format('truetype');
+    font-weight: 700; /* Bold */
+  }
+  
+  @font-face {
+    font-family: 'NanumSquareNeo';
+    src: url('@/assets/fonts/NanumSquareNeo-dEb.ttf') format('truetype');
+    font-weight: 800; /* Extra Bold */
+  }
+  
+  @font-face {
+    font-family: 'NanumSquareNeo';
+    src: url('@/assets/fonts/NanumSquareNeo-eHv.ttf') format('truetype');
+    font-weight: 900; /* Heavy */
+  }
+  
+  @font-face {
+    font-family: 'NanumSquareNeo';
+    src: url('@/assets/fonts/NanumSquareNeo-Variable.ttf') format('truetype');
+    font-weight: 100 900; /* Variable Font */
+  }
+  
+  /* 글로벌 스타일에서 전체 폰트 적용 */
+  body {
+    font-family: 'NanumSquareNeo', sans-serif !important;
+  }
+  
+  /* strong 태그에 폰트 적용 */
+  strong {
+    font-family: 'NanumSquareNeo', sans-serif !important;
+    font-weight: 700; /* 기본적으로 Bold */
+  }
+  
+  /* h4, h5 태그에 폰트 적용 */
+  h4, h5 {
+    font-family: 'NanumSquareNeo', sans-serif !important;
+    font-weight: 700; /* 기본적으로 Bold */
+  }
+  
+  /* 추가로 rem 단위 글자 스타일을 사용할 경우에도 강제 적용 */
+  p, h1, h2, h3, h4, h5, h6, strong {
+    font-family: 'NanumSquareNeo', sans-serif !important;
+  }
+  
+  /* 원하는 rem 크기별로 텍스트 스타일 적용 */
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.75rem;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+  }
+  
+  h4 {
+    font-size: 1.35rem;
+  }
+  
+  h5 {
+    font-size: 1.25rem;
+  }
+  
+  strong {
+    font-weight: 700; /* strong 기본적으로 굵게 표시 */
+  }
+  
+  /* 반응형 스타일에서도 동일한 폰트 적용 */
+  @media (max-width: 768px) {
+    strong, h4, h5 {
+      font-family: 'NanumSquareNeo', sans-serif !important;
+    }
+  }
+  

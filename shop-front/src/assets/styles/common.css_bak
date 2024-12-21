@@ -1,0 +1,226 @@
+@font-face {
+  font-family: 'NanumSquareNeo';
+  /* src: url('@/assets/fonts/NanumSquareNeo-aLt.ttf') format('truetype'); */
+  /* src: url('@/assets/fonts/NanumSquareNeo-bRg.ttf') format('truetype'); */
+  src: url('@/assets/fonts/NanumSquareNeo-cBd.ttf') format('truetype');
+  /* src: url('@/assets/fonts/NanumSquareNeo-dEb.ttf') format('truetype'); */
+  /* src: url('@/assets/fonts/NanumSquareNeo-eHv.ttf') format('truetype'); */
+}
+
+body {
+  font-family: 'NanumSquareNeo', sans-serif; /* 폰트 적용 */
+}
+
+.content {
+  padding: 30px 100px 0 100px;
+  margin-left: 220px;
+}
+
+.content-title {
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+.content-sub-title {
+  margin-bottom: 70px;
+  padding-left: 10px;
+  color: #979797;
+}
+
+.table {
+  font-size: 0.85rem; /* 모바일 테이블 글자 크기 조정 */
+}
+
+.btn-primary
+/* , .page-link, .page-item  */
+/* {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #375a7f;
+  --bs-btn-border-color: #375a7f;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #157347;
+  --bs-btn-hover-border-color: #146c43;
+  --bs-btn-focus-shadow-rgb: 60, 153, 110;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #146c43;
+  --bs-btn-active-border-color: #13653f;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #198754;
+  --bs-btn-disabled-border-color: #198754;
+} */
+{
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #375a7f;
+  --bs-btn-border-color: #375a7f;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #5a7694;
+  --bs-btn-hover-border-color: #5a7694;
+  --bs-btn-focus-shadow-rgb: 60, 153, 110;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #5a7694;
+  --bs-btn-active-border-color: #5a7694;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #5a7694;
+  --bs-btn-disabled-border-color: #5a7694;
+}
+
+/* 테이블 행에 마우스를 올렸을 때 배경색 변경 */
+#dataTable tbody tr:hover td {
+  background-color: #e7f1ff !important;
+}
+
+/* 날짜 선택 셀렉트 박스 크기 조정 */
+#yearSelect {
+  font-size: 0.8rem; /* 폰트 크기 줄이기 */
+  padding: 0.25rem 0.5rem; /* 패딩 줄이기 */
+  width: auto; /* 너비 자동 조정 */
+}
+
+/* 페이지네이션 */
+.pagination {
+  margin-top: 10px;
+}
+
+.pagination .page-link {
+  color: #375a7f;
+}
+
+.pagination .active .page-link {
+  background-color: #375a7f;
+  color: white;
+  border: none;
+}
+.page-link {
+  font-size: 0.85rem;
+  padding: 0.3rem 0.6rem;
+}
+.page-item {
+  font-size: 0.85rem;
+}
+.pagination {
+  margin: 3px 0 60px 0;
+}
+
+/* 상태별 색상 설정 */
+.status-approved {
+  color: green; /* 승인 상태는 초록색 */
+  font-weight: bold; /* 폰트를 진하게 설정 */
+}
+.status-pending {
+  color: blue; /* 신청 중 상태는 파란색 */
+  font-weight: bold; /* 폰트를 진하게 설정 */
+}
+.status-rejected {
+  color: red; /* 반려 상태는 빨간색 */
+  font-weight: bold; /* 폰트를 진하게 설정 */
+}
+.status-closed {
+  color: black; /* 회색 진하게 */
+  font-weight: bold; /* 폰트를 진하게 설정 */
+}
+
+/* 반응형 스타일 */
+@media (min-width: 1920px) {
+  .navbar-text {
+    font-size: 1.5rem; /* 더 큰 텍스트 크기 */
+  }
+}
+
+@media (max-width: 1150px) {
+  .card {
+    margin-bottom: 10px;
+  }
+  .card-header {
+    background-color: #375a7f;
+    font-weight: bold; /* 글자 진하게 */
+    color: #ffffff; /* 텍스트 색상 */
+  }
+  .card-title {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 0px;
+  }
+  .page-link {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+  .page-item {
+    font-size: 0.75rem;
+  }
+  .pagination {
+    margin: 3px 0 60px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  option {
+    font-size: 0.75rem !important;
+  }
+  textarea {
+    font-size: 0.75rem !important;
+  }
+  input {
+    font-size: 0.75rem !important;
+    padding: 0.3rem 0.6rem !important;
+    margin: 0px !important;
+  }
+  button {
+    font-size: 0.75rem !important; /* 모바일 버튼 글자 크기 줄이기 */
+    padding: 0.3rem 0.6rem !important; /* 모바일 버튼 패딩 줄이기 */
+  }
+  body {
+    padding-top: 0px !important;
+  }
+  h2 {
+    font-size: 1.25rem !important; /* 모바일 제목 글자 크기 조정 */
+  }
+  select {
+    padding: 0.3rem 0.6rem !important;
+    font-size: 0.8rem !important;
+  }
+  .mb-3 {
+    margin-bottom: 0.25rem !important; /* 하단 여백을 1rem으로 설정 */
+    font-size: 0.75rem;
+  }
+  .content {
+    margin-left: 0 !important;
+    padding: 20px !important;
+    font-size: 0.875rem !important;
+  }
+  .content-title {
+    font-size: 1.25rem !important;
+    margin-bottom: 10px !important;
+  }
+  .content-sub-title {
+    margin-bottom: 50px !important;
+  }
+  .align-items-center {
+    margin-bottom: 10px !important;
+  }
+  .table {
+    font-size: 0.75rem; /* 모바일 테이블 글자 크기 조정 */
+  }
+  .card {
+    margin-bottom: 10px !important;
+  }
+  .card-title {
+    font-size: 0.8rem !important;
+    margin-bottom: 0px !important;
+  }
+  .text-muted,
+  .card-text {
+    font-size: 0.75rem !important;
+    margin-bottom: 7px !important;
+  }
+  .page-link {
+    font-size: 0.75rem !important;
+    padding: 0.3rem 0.6rem !important;
+  }
+  .page-item {
+    font-size: 0.75rem !important;
+  }
+  .pagination {
+    margin: 3px 0 40px 0 !important;
+  }
+}

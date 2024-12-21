@@ -70,4 +70,24 @@ public class OrderItem extends BaseEntity {
 
     private int count;
 
+    public static OrderItem createOrderItem(Item item, int count) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.setItem(item);
+        orderItem.setCount(count);
+        // 현재 시간 기준으로 상품 가격을 주문 가격으로 셋팅
+        // 상품 가격은 시간에 따라 달라질수 있고 쿠폰이나 할인을 적용하는 케이스들도 있지만 여기서는 고려 X
+        orderItem.setOrderPrice(item.getPrice());
+        // 주문 수량만큼 상품의 재고 수량을 감소
+        item.removeStock(count);
+        return orderItem;
+    }
+
+    // 주문한 총 가격을 계산
+    public int getTotalPrice() {
+        return orderPrice * count;
+    }
+
+    public void cancel() {
+        this.getItem().addStock(count);
+    }
 }
