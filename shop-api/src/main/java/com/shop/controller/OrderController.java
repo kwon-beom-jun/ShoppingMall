@@ -47,7 +47,6 @@ public class OrderController {
             }
             return new ResponseEntity<String>(sb.toString(), HttpStatus.BAD_REQUEST);
         }
-
         String email = principal.getName();
         Long orderId;
         try {
@@ -60,10 +59,17 @@ public class OrderController {
 
     @GetMapping(value = {"/orders", "/orders/{page}"})
     public ResponseEntity<Page<OrderHistDto>> orderHist(@PathVariable("page") Optional<Integer> page, Principal principal) {
-
         Pageable pageable = PageRequest.of(page.orElse(0), 2);  // 페이지 값 없으면 0
         Page<OrderHistDto> ordersHistDtoList = orderService.getOrderList(principal.getName(), pageable);
-
         return ResponseEntity.ok(ordersHistDtoList);
+    }
+
+    @PostMapping("/order/{orderId}/cancel")
+    public @ResponseBody ResponseEntity cancelOrder(@PathVariable("orderId") Long orderId , Principal principal) {
+        if(!orderService.validateOrder(orderId, principal.getName())) {
+            return new ResponseEntity<String>("주문 취소 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+        orderService.cancelOrder(orderId);
+        return new ResponseEntity<Long>(orderId, HttpStatus.OK);
     }
 }
