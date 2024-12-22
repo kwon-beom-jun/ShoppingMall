@@ -14,6 +14,9 @@ import itemForm from '@/views/item/itemForm.vue';
 import itemMng from '@/views/item/itemMng.vue';
 import itemDtl from '@/views/item/itemDtl.vue';
 
+// order
+import orderHist from '@/views/order/orderHist.vue';
+
 const routes = [
   {
     path: '/vue/',
@@ -30,13 +33,13 @@ const routes = [
     name: 'memberRegister',
     component: MemberRegister,
   },
+  {
   /** 
    * admin/item/new URL에서 router.currentRoute.value의 params 값을 보면 new가 들어가있고
    * 이로인해 new도 :itemId 값으로 치부되는것으로 추측되어 아래의 코드는 불필요하다고 생각
    * /vue/admin/item/:itemId, /vue/admin/item/new 동일하게 itemForm을 사용
    * 
   */
-  {
   //path: '/vue/admin/item/new',
     path: '/vue/admin/item/:itemId',
     name: 'itemForm',
@@ -60,6 +63,11 @@ const routes = [
     path: '/vue/item/:itemId',
     name: 'itemDtl',
     component: itemDtl,
+  },
+  {
+    path: '/vue/orders',
+    name: 'orderHist',
+    component: orderHist,
   },
 ];
 

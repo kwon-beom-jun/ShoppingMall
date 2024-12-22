@@ -1,8 +1,10 @@
 package com.shop.controller;
 
 import com.shop.dto.OrderDto;
+import com.shop.dto.OrderHistDto;
 import com.shop.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -48,7 +50,6 @@ public class OrderController {
 
         String email = principal.getName();
         Long orderId;
-
         try {
             orderId = orderService.order(orderDto, email);
         } catch(Exception e) {
@@ -57,4 +58,12 @@ public class OrderController {
         return new ResponseEntity<Long>(orderId, HttpStatus.OK);
     }
 
+    @GetMapping(value = {"/orders", "/orders/{page}"})
+    public ResponseEntity<Page<OrderHistDto>> orderHist(@PathVariable("page") Optional<Integer> page, Principal principal) {
+
+        Pageable pageable = PageRequest.of(page.orElse(0), 2);  // 페이지 값 없으면 0
+        Page<OrderHistDto> ordersHistDtoList = orderService.getOrderList(principal.getName(), pageable);
+
+        return ResponseEntity.ok(ordersHistDtoList);
+    }
 }
