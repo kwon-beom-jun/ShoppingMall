@@ -36,7 +36,6 @@ public class CartItem extends BaseEntity {
     @Column(name = "cart_item_id")
     private Long id;
 
-
 /*
     alter table cart_item
     add constraint FK1uobyhgl1wvgt1jpccia8xxs3
@@ -58,4 +57,16 @@ public class CartItem extends BaseEntity {
 
     private int count; // 같은 상품을 장바구니에 몇 개 담을지 저장
 
+    public static CartItem createCartItem(Cart cart, Item item, int count) {
+        CartItem cartItem = new CartItem();
+        cartItem.setCart(cart);
+        cartItem.setItem(item);
+        cartItem.setCount(count);
+        return cartItem;
+    }
+
+    // 장바구니 있는 상품 추가 시
+    public void addCount(int count) {
+        this.count += count;
+    }
 }
