@@ -133,40 +133,72 @@
   });
   </script>
   
-  <style scoped>
-  .content-mg {
-    margin-left: 30%;
-    margin-right: 30%;
-    margin-top: 2%;
-    margin-bottom: 100px;
-  }
-  .repImgDiv {
-    margin-right: 15px;
-    margin-left: 15px;
-    height: auto;
-  }
-  .repImg {
-    height: 100px;
-    width: 100px;
-  }
-  .card {
-    width: 750px;
-    height: 100%;
-    padding: 30px;
-    margin-bottom: 20px;
-  }
-  .fs18 {
-    font-size: 18px;
-  }
-  .fs24 {
-    font-size: 24px;
-  }
-  .pagination-container {
-    margin-top: 20px;
-  }
-  .pagination .page-item.active .page-link {
-    background-color: #007bff;
-    border-color: #007bff;
-  }
-  </style>
+<style scoped>
+.content-mg {
+  margin-left: 30%;
+  margin-right: 30%;
+  margin-top: 2%;
+  margin-bottom: 100px;
+}
+
+.repImgDiv {
+  margin-right: 15px;
+  margin-left: 15px;
+  height: auto;
+}
+
+.repImg {
+  height: 100px;
+  width: 100px;
+}
+
+.card {
+  width: 750px;
+  height: 100%;
+  padding: 30px;
+  margin-bottom: 20px;
+}
+
+.fs18 {
+  font-size: 18px;
+}
+
+.fs24 {
+  font-size: 24px;
+}
+
+.pagination-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center; /* 가운데 정렬 */
+}
+
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pagination .page-item {
+  margin: 0 5px; /* 각 페이지 항목 간의 간격 추가 */
+}
+
+.pagination .page-link {
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.pagination .page-item.disabled .page-link {
+  cursor: not-allowed;
+  background-color: #f0f0f0;
+  border-color: #f0f0f0;
+}
+</style>
+
   

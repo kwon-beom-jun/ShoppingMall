@@ -17,6 +17,9 @@ import itemDtl from '@/views/item/itemDtl.vue';
 // order
 import orderHist from '@/views/order/orderHist.vue';
 
+// order
+import cartList from '@/views/cart/cartList.vue';
+
 const routes = [
   {
     path: '/vue/',
@@ -68,6 +71,11 @@ const routes = [
     path: '/vue/orders',
     name: 'orderHist',
     component: orderHist,
+  },
+  {
+    path: '/vue/cartList',
+    name: 'cartList',
+    component: cartList,
   },
 ];
 

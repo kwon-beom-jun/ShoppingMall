@@ -108,12 +108,12 @@ async function addCart() {
 		// use router.push directly since we don't need `this`
 		router.push('/vue');  // useRouter is used directly in <script setup>
 	})
-	.catch((error) => {
-		if (error.status === 401) {
+	.catch((result) => {
+		if (result.response.status === 401) {
 			alert('로그인 후 이용해주세요');
 			router.push('/vue/members/login'); // use router.push directly
 		} else {
-			alert(error.responseText);
+			alert(result.response.data);
 		}
 	});
 }

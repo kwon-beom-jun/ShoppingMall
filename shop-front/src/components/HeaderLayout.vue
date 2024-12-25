@@ -44,7 +44,7 @@
       <v-list-item v-if="isAdmin && isLoggedIn" href="/vue/admin/items">
         <v-list-item-title>상품 관리</v-list-item-title>
       </v-list-item>
-      <v-list-item v-if="isUser && isLoggedIn" href="/vue/cart">
+      <v-list-item v-if="isUser && isLoggedIn" href="/vue/cartList">
         <v-list-item-title>장바구니</v-list-item-title>
       </v-list-item>
       <v-list-item v-if="isUser && isLoggedIn" href="/vue/orders">
