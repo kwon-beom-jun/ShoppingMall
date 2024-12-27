@@ -60,8 +60,11 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import axios from 'axios';
 
+// Vue Router 훅 사용
+const router = useRouter();
 const cartItems = ref([]);
 const selectedItems = ref([]);
 const checkAll = ref(false);
@@ -123,12 +126,16 @@ async function orders() {
   });
 
   try {
-    await axios.post('/cart/orders', { cartOrderDtoList: selectedItemsData });
-    alert('주문이 완료되었습니다.');
-    // Redirect to the order page or another page
+    const response = await axios.post('/cart/orders', { cartOrderDtoList: selectedItemsData });
+    if(response.status == 200 || response.statusText == 'OK') {
+      console.log(response);
+      console.log(response.data);
+      alert(`주문이 완료되었습니다. ${response.data}`);
+      router.push({ name: 'main' });
+    }
   } catch (error) {
     console.error('Failed to place order:', error.response.data);
-    alert('주문에 실패했습니다.');
+    alert(error.response.data);
   }
 }
 
