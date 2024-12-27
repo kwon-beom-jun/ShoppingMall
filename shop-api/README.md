@@ -3,7 +3,8 @@
 
 <br>
 
-## 🖥 Project Development Environment
+## 🖥 Project Development Environment 
+#### BAKEEND, FRONTEND URL [ IP:PORT/vue ]
 <!--
 | IDE      | JDK | Build Tool | SpringBoot | Database | JPA     | Server          | AWS (예정) |
 |----------|-----|------------|------------|----------|---------|-----------------|------------|
