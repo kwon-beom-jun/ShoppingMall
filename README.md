@@ -5,6 +5,7 @@
 <br>
 
 ## 🖥 Project Development Environment
+#### BAKEEND, FRONTEND URL [ IP:PORT/vue ]
 > ### SHOP-API
 > | <sub>IDE</sub>      | <sub>JDK</sub> | <sub>Build Tool</sub> | <sub>SpringBoot</sub>  | <sub>Database</sub>  | <sub>JPA</sub>   | <sub>Server</sub>          | <sub>AWS (예정)</sub> |
 > |---------------------|----------------|-----------------------|------------------------|----------------------|------------------|----------------------------|-----------------------|
